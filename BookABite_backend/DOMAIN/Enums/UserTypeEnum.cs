@@ -1,6 +1,4 @@
-﻿
-
-namespace DOMAIN.Enums;
+﻿namespace DOMAIN.Enums;
 
 public enum UserTypeEnum
 {
