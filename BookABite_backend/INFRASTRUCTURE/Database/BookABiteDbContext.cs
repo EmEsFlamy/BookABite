@@ -1,4 +1,4 @@
-﻿using DOMAIN.Entities;
+﻿using INFRASTRUCTURE.Entities;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -14,6 +14,7 @@ public class BookABiteDbContext : DbContext
     public DbSet<Order> Orders {  get; set; }
     public DbSet<MenuOrder> MenuOrders { get; set; }
     public DbSet<OrderHistory> OrdersHistories { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

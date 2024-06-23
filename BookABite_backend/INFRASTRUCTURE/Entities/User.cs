@@ -1,7 +1,7 @@
-﻿using DOMAIN.Enums;
+﻿using INFRASTRUCTURE.Enums;
 
 
-namespace DOMAIN.Entities;
+namespace INFRASTRUCTURE.Entities;
 
 public class User
 {   

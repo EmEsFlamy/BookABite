@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(BookABiteDbContext))]
-    [Migration("20240623173339_FirstMigration")]
+    [Migration("20240623181500_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace INFRASTRUCTURE.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DOMAIN.Entities.Menu", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Menu", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("Menus");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.MenuOrder", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.MenuOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("MenuOrders");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.Order", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,7 +106,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.OrderHistory", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.OrderHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +125,46 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("OrdersHistories");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.Table", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClientName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClientPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClientSurname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ReservationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("TableId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TableId");
+
+                    b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Table", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -144,7 +183,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("Tables");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.User", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,29 +215,29 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.MenuOrder", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.MenuOrder", b =>
                 {
-                    b.HasOne("DOMAIN.Entities.Menu", "Menu")
+                    b.HasOne("INFRASTRUCTURE.Entities.Menu", "Menu")
                         .WithMany("Order")
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DOMAIN.Entities.Order", "Order")
+                    b.HasOne("INFRASTRUCTURE.Entities.Order", "Order")
                         .WithMany("OrdersMenu")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DOMAIN.Entities.Table", "Table")
+                    b.HasOne("INFRASTRUCTURE.Entities.Table", "Table")
                         .WithOne("MenuOrder")
-                        .HasForeignKey("DOMAIN.Entities.MenuOrder", "TableId")
+                        .HasForeignKey("INFRASTRUCTURE.Entities.MenuOrder", "TableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DOMAIN.Entities.User", "User")
+                    b.HasOne("INFRASTRUCTURE.Entities.User", "User")
                         .WithOne("MenuOrder")
-                        .HasForeignKey("DOMAIN.Entities.MenuOrder", "UserId")
+                        .HasForeignKey("INFRASTRUCTURE.Entities.MenuOrder", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -211,22 +250,35 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.Menu", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Reservation", b =>
+                {
+                    b.HasOne("INFRASTRUCTURE.Entities.Table", "Table")
+                        .WithMany("Reservations")
+                        .HasForeignKey("TableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Table");
+                });
+
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Menu", b =>
                 {
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.Order", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Order", b =>
                 {
                     b.Navigation("OrdersMenu");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.Table", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.Table", b =>
                 {
                     b.Navigation("MenuOrder");
+
+                    b.Navigation("Reservations");
                 });
 
-            modelBuilder.Entity("DOMAIN.Entities.User", b =>
+            modelBuilder.Entity("INFRASTRUCTURE.Entities.User", b =>
                 {
                     b.Navigation("MenuOrder");
                 });

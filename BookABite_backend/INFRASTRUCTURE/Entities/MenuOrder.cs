@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace DOMAIN.Entities;
+
+namespace INFRASTRUCTURE.Entities;
 
 public class MenuOrder
 {
@@ -17,5 +14,5 @@ public class MenuOrder
     public Order Order { get; set; } = null!;
     public int MenuId { get; set; }
     public Menu Menu { get; set; } = null!;
-   
+
 }

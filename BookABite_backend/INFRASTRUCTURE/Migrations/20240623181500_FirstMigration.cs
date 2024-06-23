@@ -88,6 +88,31 @@ namespace INFRASTRUCTURE.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ReservationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
+                    ClientName = table.Column<string>(type: "text", nullable: false),
+                    ClientSurname = table.Column<string>(type: "text", nullable: false),
+                    ClientPhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    TableId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Tables_TableId",
+                        column: x => x.TableId,
+                        principalTable: "Tables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MenuOrders",
                 columns: table => new
                 {
@@ -148,6 +173,11 @@ namespace INFRASTRUCTURE.Migrations
                 table: "MenuOrders",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_TableId",
+                table: "Reservations",
+                column: "TableId");
         }
 
         /// <inheritdoc />
@@ -160,16 +190,19 @@ namespace INFRASTRUCTURE.Migrations
                 name: "OrdersHistories");
 
             migrationBuilder.DropTable(
+                name: "Reservations");
+
+            migrationBuilder.DropTable(
                 name: "Menus");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Tables");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Tables");
         }
     }
 }

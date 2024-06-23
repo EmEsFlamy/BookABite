@@ -1,11 +1,8 @@
-﻿using DOMAIN.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace DOMAIN.Entities;
+using INFRASTRUCTURE.Enums;
+
+namespace INFRASTRUCTURE.Entities;
 
 public class Menu
 {
@@ -15,7 +12,7 @@ public class Menu
 
     public decimal Price { get; set; }
 
-    
+
     public ICollection<MenuOrder> Order { get; } = new List<MenuOrder>();
 
     public FoodTypeEnum FoodType { get; set; }
