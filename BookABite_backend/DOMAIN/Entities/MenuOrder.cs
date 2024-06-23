@@ -15,5 +15,7 @@ public class MenuOrder
     public User User { get; set; } = null!;
     public int OrderId { get; set; }
     public Order Order { get; set; } = null!;
-    public ICollection<Menu> Menu { get; set; }
+    public int MenuId { get; set; }
+    public Menu Menu { get; set; } = null!;
+   
 }

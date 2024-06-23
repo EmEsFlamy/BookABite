@@ -13,15 +13,11 @@ public class BookABiteDbContext : DbContext
     public DbSet<Table> Tables { get; set; }
     public DbSet<Order> Orders {  get; set; }
     public DbSet<MenuOrder> MenuOrders { get; set; }
+    public DbSet<OrderHistory> OrdersHistories { get; set; }
 
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //{
-    //    base.OnModelCreating(modelBuilder);
-
-    //    modelBuilder.Entity<User>()
-    //        .HasOne(m => m.MenuOrder)
-    //        .WithOne(u => u.User)
-    //        .HasForeignKey<MenuOrder>(u => u.UserId);
-    //}
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        
+    }
 
 }

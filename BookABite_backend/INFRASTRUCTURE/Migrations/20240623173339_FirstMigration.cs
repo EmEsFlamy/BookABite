@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,22 +7,53 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace INFRASTRUCTURE.Migrations
 {
     /// <inheritdoc />
-    public partial class firstMigration : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Menus",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FoodName = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    FoodType = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Menus", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FullPrice = table.Column<decimal>(type: "numeric", nullable: false)
+                    FullPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    Time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    OrderStatus = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrdersHistories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FullPrice = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrdersHistories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -63,11 +95,18 @@ namespace INFRASTRUCTURE.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TableId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    OrderId = table.Column<int>(type: "integer", nullable: false)
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    MenuId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MenuOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MenuOrders_Menus_MenuId",
+                        column: x => x.MenuId,
+                        principalTable: "Menus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MenuOrders_Orders_OrderId",
                         column: x => x.OrderId,
@@ -88,27 +127,10 @@ namespace INFRASTRUCTURE.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Menus",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FoodName = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    MenuOrderId = table.Column<int>(type: "integer", nullable: false),
-                    FoodType = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Menus", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Menus_MenuOrders_MenuOrderId",
-                        column: x => x.MenuOrderId,
-                        principalTable: "MenuOrders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_MenuOrders_MenuId",
+                table: "MenuOrders",
+                column: "MenuId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MenuOrders_OrderId",
@@ -126,21 +148,19 @@ namespace INFRASTRUCTURE.Migrations
                 table: "MenuOrders",
                 column: "UserId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Menus_MenuOrderId",
-                table: "Menus",
-                column: "MenuOrderId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Menus");
+                name: "MenuOrders");
 
             migrationBuilder.DropTable(
-                name: "MenuOrders");
+                name: "OrdersHistories");
+
+            migrationBuilder.DropTable(
+                name: "Menus");
 
             migrationBuilder.DropTable(
                 name: "Orders");

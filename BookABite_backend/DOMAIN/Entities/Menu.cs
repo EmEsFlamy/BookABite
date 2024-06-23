@@ -15,8 +15,8 @@ public class Menu
 
     public decimal Price { get; set; }
 
-    public int MenuOrderId { get; set; }
-    public MenuOrder? MenuOrder { get; set; }
+    
+    public ICollection<MenuOrder> Order { get; } = new List<MenuOrder>();
 
     public FoodTypeEnum FoodType { get; set; }
 }
