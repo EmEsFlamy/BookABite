@@ -19,9 +19,9 @@ namespace APPLICATION.Services
             return result;
         }
 
-        public async Task<bool> DeleteAsync(Reservation reservation)
+        public async Task<bool> DeleteAsync(int reservationId)
         {
-            var result = await _reservationRepository.DeleteAsync(reservation);
+            var result = await _reservationRepository.DeleteAsync(reservationId);
             return result;
         }
 

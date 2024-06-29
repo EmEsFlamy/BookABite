@@ -22,7 +22,8 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             IsCompleted = reservation.IsCompleted,
             ClientName = reservation.ClientName,
             ClientSurname = reservation.ClientSurname,
-            ClientPhoneNumber = reservation.ClientPhoneNumber
+            ClientPhoneNumber = reservation.ClientPhoneNumber,
+            TableId = 1 // TODO: ustawiać dynamicznie
         };
         await _dbContext.Reservations.AddAsync(r);
         await _dbContext.SaveChangesAsync();
@@ -30,9 +31,9 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         return reservation;
     }
 
-    public async Task<bool> DeleteAsync(Reservation reservation)
+    public async Task<bool> DeleteAsync(int reservationId)
     {
-        var er = await _dbContext.Reservations.SingleOrDefaultAsync(r => r.Id == reservation.Id);
+        var er = await _dbContext.Reservations.SingleOrDefaultAsync(r => r.Id == reservationId);
 
         if (er is null)
         {
