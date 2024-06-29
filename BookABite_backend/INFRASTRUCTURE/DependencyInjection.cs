@@ -1,4 +1,6 @@
-﻿using INFRASTRUCTURE.Database;
+﻿using DOMAIN.Repositories;
+using INFRASTRUCTURE.Database;
+using INFRASTRUCTURE.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,8 @@ public static class DependencyInjection
         services.AddDbContext<BookABiteDbContext>(options => {
             options.UseNpgsql(conn);
         });
+
+        services.AddScoped<IReservationRepository, ReservationRespository>();
 
         return services;
     }
