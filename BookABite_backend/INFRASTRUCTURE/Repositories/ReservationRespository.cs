@@ -30,9 +30,17 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         return reservation;
     }
 
-    public Task DeleteAsync()
+    public async Task<bool> DeleteAsync(Reservation reservation)
     {
-        throw new NotImplementedException();
+        var er = await _dbContext.Reservations.SingleOrDefaultAsync(r => r.Id == reservation.Id);
+
+        if (er is null)
+        {
+            return false;
+        }
+        _dbContext.Reservations.Remove(er);
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
     public Task GetAsync()
@@ -55,9 +63,24 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         };
     }
 
-    public Task UpdateAsync()
+    public async Task<Reservation> UpdateAsync(Reservation reservation)
     {
-        throw new NotImplementedException();
+        var er = await _dbContext.Reservations.FirstOrDefaultAsync(r => r.Id == reservation.Id);
+
+        if (er is null)
+        {
+            return null; 
+        }
+
+        er.ReservationTime = reservation.ReservationTime;
+        er.IsActive = reservation.IsActive;
+        er.IsCompleted = reservation.IsCompleted;
+        er.ClientName = reservation.ClientName;
+        er.ClientSurname = reservation.ClientSurname;
+        er.ClientPhoneNumber = reservation.ClientPhoneNumber;
+
+        await _dbContext.SaveChangesAsync();
+        return reservation;
     }
 }
 
