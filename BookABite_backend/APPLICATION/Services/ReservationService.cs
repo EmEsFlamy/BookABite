@@ -1,6 +1,7 @@
 ﻿using DOMAIN.Models;
 using DOMAIN.Repositories;
 using DOMAIN.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,23 @@ using System.Threading.Tasks;
 
 namespace APPLICATION.Services
 {
-    public class ReservationService(IReservationRepository reservationRepository) : IReservationService
+    public class ReservationService(IReservationRepository reservationRepository, ILogger<ReservationService> logger) : IReservationService
     {
         private readonly IReservationRepository _reservationRepository = reservationRepository;
+        private readonly ILogger<ReservationService> _logger = logger;
         
         public async Task<Reservation> CreateAsync(Reservation reservation)
         {
+            _logger.LogInformation("Reservation creating");
             var result = await _reservationRepository.CreateAsync(reservation);
+            if (result is null)
+            {
+                _logger.LogError("Reservation failed");
+            }
+            else
+            {
+                _logger.LogInformation("Reservation succed");
+            }
             return result;
         }
 
