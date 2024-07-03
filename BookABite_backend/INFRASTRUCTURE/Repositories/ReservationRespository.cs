@@ -23,7 +23,7 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             ClientName = reservation.ClientName,
             ClientSurname = reservation.ClientSurname,
             ClientPhoneNumber = reservation.ClientPhoneNumber,
-            TableId = 5 // TODO: ustawiać dynamicznie
+            TableId = 1 // TODO: ustawiać dynamicznie
         };
         await _dbContext.Reservations.AddAsync(r);
         await _dbContext.SaveChangesAsync();
