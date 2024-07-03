@@ -1,3 +1,4 @@
+using API.GlobalExceptionHandlers;
 using APPLICATION;
 using INFRASTRUCTURE;
 using INFRASTRUCTURE.Database;
@@ -5,11 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+
 
 var app = builder.Build();
 
@@ -21,6 +25,8 @@ if (app.Environment.IsDevelopment())
     var db = scope.ServiceProvider.GetRequiredService<BookABiteDbContext>();
     db.Database.Migrate();
 }
+
+app.UseExceptionHandler(opt => { });
 
 app.UseHttpsRedirection();
 
