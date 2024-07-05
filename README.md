@@ -1,2 +1,2 @@
 # BookABite
- Aplication for waiters
+ Application for waiters
