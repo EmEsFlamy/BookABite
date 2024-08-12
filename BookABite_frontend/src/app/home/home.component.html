@@ -6,15 +6,47 @@
         <a class="btn" routerLink="/menu">Explore Our Menu</a>
       </div>
     </header>
-    <section class="about">
-      <div class="about-content">
-        <h2>About Us</h2>
-        <p>
-          At BookABite, we take pride in serving the finest dishes made from the freshest ingredients. Our chefs are
-          passionate about creating unforgettable dining experiences for every guest.
-        </p>
+    
+    <section class="two-column-container">
+      <div class="slider">
+        <div #sliderImages class="slider-images">
+          <img #sliderImage src="assets/images/restaurant1.jpg" alt="Photo 1">
+          <img #sliderImage src="assets/images/restaurant2.jpg" alt="Photo 2">
+          <img #sliderImage src="assets/images/restaurant3.jpg" alt="Photo 3">
+          <img #sliderImage src="assets/images/restaurant4.jpg" alt="Photo 4">
+          <img #sliderImage src="assets/images/restaurant5.jpg" alt="Photo 5">
+        </div>
+      </div>
+      <div class="about">
+        <div class="about-content">
+          <h2>About Us</h2>
+          <p>
+            At BookABite, we take pride in serving the finest dishes made from the freshest ingredients. Our chefs are
+            passionate about creating unforgettable dining experiences for every guest.
+          </p>
+        </div>
       </div>
     </section>
+
+    <c-carousel>
+      <c-carousel-indicators></c-carousel-indicators>
+      <c-carousel-inner>
+        <c-carousel-item *ngFor="let slide of slides">
+          <img
+            alt="{{slide.title}}"
+            class="d-block w-100"
+            loading="lazy"
+            src="{{slide.src}}"
+          />
+          <c-carousel-caption class="d-none d-md-block">
+            <h3>{{slide.title}}</h3>
+            <p>{{slide.subtitle}}</p>
+          </c-carousel-caption>
+        </c-carousel-item>
+      </c-carousel-inner>
+      <c-carousel-control caption="Previous" direction="prev"></c-carousel-control>
+      <c-carousel-control caption="Next" direction="next"></c-carousel-control>
+    </c-carousel>
   
   
     <section class="menu-highlights">

@@ -6,8 +6,7 @@ body, html {
     height: 100%;
 }
 
-.home-container {
-    height: 120vh;
+.hero-banner {
     background-image: url('./assets/images/background2.jpg'); 
     background-size: cover;
     background-position: center;
@@ -16,7 +15,7 @@ body, html {
 
 }
 
-.about, .menu-highlights, .gallery, .contact {
+.menu-highlights, .gallery, .contact, .two-column-container {
     background-image: url('./assets/images/background3.jpg');
     background-size: cover;
     background-position: center;

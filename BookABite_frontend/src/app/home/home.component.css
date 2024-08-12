@@ -39,8 +39,37 @@
   background-color: #e55d00;
 }
 
+.two-column-container{
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.slider {
+  flex: 1;
+  max-width: 60%;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-images{
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 500%;
+}
+
+.slider-images img{
+  width: 20%;
+  height: 400px;
+  border-radius: 5px;
+}
+
 .about {
-  padding: 2rem 1rem;
+  flex: 1;
+  max-width: 40%;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 5px;
   text-align: center;
 }
 

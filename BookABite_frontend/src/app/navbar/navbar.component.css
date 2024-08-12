@@ -1,7 +1,12 @@
 .navbar {
-    background-color: #333;
     color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent;
     padding: 1rem;
+    z-index: 1000;
   }
   
   .navbar-container {
@@ -14,7 +19,7 @@
     font-size: 1.5rem;
     color: white;
     text-decoration: none;
-    margin-right: auto;
+    margin-right: 1rem;
   }
   
   .navbar-nav {
@@ -22,10 +27,16 @@
     display: flex;
     gap: 3rem;
     font-size: 1.2rem;
-    justify-content: center;
+    justify-content: flex-end;
     margin: 0;
     padding: 0;
-    flex: 1;
+    font-family: 'Lucida Handwriting', 'cursive';
+    text-shadow:
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,   
+    -1px 1px 0 #000,   
+    1px 1px 0 #000;
+    margin-right: 25rem;
   }
   
   .nav-item {
@@ -40,4 +51,5 @@
     text-decoration: underline;
     cursor: pointer;
   }
+
   
