@@ -1,21 +1,47 @@
-import { Component} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {CarouselModule} from '@coreui/angular';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import {
+  CarouselCaptionComponent,
+  CarouselComponent,
+  CarouselControlComponent,
+  CarouselIndicatorsComponent,
+  CarouselInnerComponent,
+  CarouselItemComponent,
+  ThemeDirective
+} from '@coreui/angular';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule,CommonModule, CarouselModule],
+  imports: [RouterModule, CarouselCaptionComponent, CarouselModule, CommonModule, ThemeDirective, CarouselComponent, CarouselIndicatorsComponent, CarouselInnerComponent, CarouselItemComponent, CarouselControlComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  slides = [
-    { src: 'assets/images/restaurant1.jpg', title: 'Delicious Dish 1', subtitle: 'Our Speciality' },
-    { src: 'assets/images/restaurant2.jpg', title: 'Delicious Dish 2', subtitle: 'Cooked to Perfection' },
-    { src: 'assets/images/restaurant3.jpg', title: 'Delicious Dish 3', subtitle: 'A Taste of Heaven' },
-    { src: 'assets/images/restaurant4.jpg', title: 'Delicious Dish 4', subtitle: 'Gourmet Delight' },
-    { src: 'assets/images/restaurant5.jpg', title: 'Delicious Dish 5', subtitle: 'Ultimate Flavor' }
-  ];
+export class HomeComponent implements OnInit {
+
+  slides: any[] = new Array(3).fill({ id: -1, src: '', title: '', subtitle: '' });
+
+  ngOnInit(): void {
+    this.slides[0] = {
+      id: 0,
+      src: '../../assets/images/restaurant1.jpg',
+      title: 'First slide',
+      subtitle: 'Nulla vitae elit libero, a pharetra augue mollis interdum.'
+    };
+    this.slides[1] = {
+      id: 1,
+      src: '../../assets/images/restaurant2.jpg',
+      title: 'Second slide',
+      subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+    };
+    this.slides[2] = {
+      id: 2,
+      src: '../../assets/images/restaurant3.jpg',
+      title: 'Third slide',
+      subtitle: 'Praesent commodo cursus magna, vel scelerisque nisl consectetur.'
+    };
+  }
 }
