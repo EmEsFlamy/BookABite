@@ -27,7 +27,16 @@
         </div>
       </div>
     </section>
-  
+
+      <nz-carousel nzEffect='scrollx'>
+        @for (index of array; track index) {
+          <div class="nz-carousel-content">
+            <h3>{{ index }}</h3>
+          </div>
+        }
+      </nz-carousel>
+    
+
     <section class="menu-highlights">
       <div class="menu-content">
         <h2>Menu Highlights</h2>
