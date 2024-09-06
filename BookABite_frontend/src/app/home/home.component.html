@@ -9,33 +9,27 @@
     
     <section class="two-column-container">
       <div class="slider">
-        <div #sliderImages class="slider-images">
-          <img #sliderImage src="assets/images/restaurant1.jpg" alt="Photo 1">
-          <img #sliderImage src="assets/images/restaurant2.jpg" alt="Photo 2">
-          <img #sliderImage src="assets/images/restaurant3.jpg" alt="Photo 3">
-          <img #sliderImage src="assets/images/restaurant4.jpg" alt="Photo 4">
-          <img #sliderImage src="assets/images/restaurant5.jpg" alt="Photo 5">
-        </div>
+        <nz-carousel nzEffect="scrollx">
+          <div nz-carousel-content *ngFor="let nmb of array">
+            <img [src]="nmb.src"/>
+          </div>
+        </nz-carousel>
       </div>
+
       <div class="about">
         <div class="about-content">
           <h2>About Us</h2>
           <p>
-            At BookABite, we take pride in serving the finest dishes made from the freshest ingredients. Our chefs are
-            passionate about creating unforgettable dining experiences for every guest.
+            Welcome to BookABite, where passion meets flavor! We are dedicated to offering a unique culinary experience, combining the freshest ingredients with expert craftsmanship. Each dish we create is a celebration of flavors, carefully curated by our talented chefs who are committed to perfection in every bite.
+            At BookABite, our mission is to provide more than just a meal — we strive to deliver unforgettable dining moments. Whether you’re here for a casual meal, a special celebration, or a quiet evening out, we promise an atmosphere that’s as inviting as it is exciting. From locally sourced produce to our commitment to quality and innovation, every detail is designed to elevate your dining experience.
+            Join us for a journey of flavor and warmth, where every visit is more than a meal — it’s a cherished memory in the making. Experience BookABite, where passion is always on the menu.
           </p>
         </div>
       </div>
     </section>
 
-      <nz-carousel nzEffect='scrollx'>
-        @for (index of array; track index) {
-          <div class="nz-carousel-content">
-            <h3>{{ index }}</h3>
-          </div>
-        }
-      </nz-carousel>
-    
+      
+      
 
     <section class="menu-highlights">
       <div class="menu-content">
