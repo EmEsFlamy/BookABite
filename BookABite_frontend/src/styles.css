@@ -15,7 +15,7 @@ body, html {
 
 }
 
-.menu-highlights, .gallery, .contact, .two-column-container {
+.menu-highlights, .gallery, .contact, .two-column-container, .login-container {
     background-image: url('./assets/images/background3.jpg');
     background-size: cover;
     background-position: center;
