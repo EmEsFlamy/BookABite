@@ -3,6 +3,7 @@ using APPLICATION;
 using INFRASTRUCTURE;
 using INFRASTRUCTURE.Database;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,10 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddControllers();
-
+builder.Host.UseSerilog((ctx, conf) =>
+{
+    conf.ReadFrom.Configuration(ctx.Configuration);
+});
 
 
 var app = builder.Build();
