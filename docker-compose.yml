@@ -19,4 +19,11 @@ services:
     ports:
       - 5433:5432
     #volumes:
-    # - ./BookABite_database/data:/var/lib/postgresql/data
+    # - ./.containers/db:/var/lib/postgresql/data
+  seq:
+    image: datalust/seq:latest
+    environment: 
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8081:80
