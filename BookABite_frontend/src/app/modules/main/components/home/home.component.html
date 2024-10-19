@@ -1,0 +1,72 @@
+<div class="home-container bg-common">
+  <header class="hero-banner">
+    <div class="hero-content">
+      <h1>Welcome to BookABite</h1>
+      <p>Experience the best cuisine in town</p>
+      <a class="btn" routerLink="/menu">Explore Our Menu</a>
+    </div>
+  </header>
+
+   <section class="two-column-container">
+    <nz-row [nzGutter]="24" class="equal-height-row" nzAlign="middle">
+      <nz-col class="slider-col" nzSpan="14" nzXs="24" nzMd="14">
+        <div class="slider">
+          <nz-carousel nzEffect="scrollx">
+            <div nz-carousel-content *ngFor="let nmb of array">
+              <img [src]="nmb.src" alt="carousel image"/>
+            </div>
+          </nz-carousel>
+        </div>
+      </nz-col>
+      <nz-col class="about-col" nzSpan="10"nzXs="24" nzMd="10">
+        <div class="about">
+          <div class="about-content">
+            <h2>About Us</h2>
+            <p>
+              Welcome to BookABite, where passion meets flavor! We are dedicated to offering a unique culinary experience, combining the freshest ingredients with expert craftsmanship. Each dish we create is a celebration of flavors, carefully curated by our talented chefs who are committed to perfection in every bite.
+            </p>
+          </div>
+        </div>
+      </nz-col>
+    </nz-row>
+  </section>
+
+  <section class="menu-highlights">
+    <div class="menu-content">
+      <h1>Menu Highlights</h1>
+      <nz-row class="custom-margin-row" nzAlign="middle" nzJustify="center">
+        <nz-col nzSpan="16" nzXs="24" nzSm="12" nzMd="8" nzLg="8" nzXl="8" nzXXl="4">
+          <div class="menu-item">
+            <img src="assets/images/grilled-chicken.jpg" alt="Grilled Chicken">
+            <h3>Grilled Chicken</h3>
+          </div>
+        </nz-col>
+        <nz-col nzSpan="16" nzXs="24" nzSm="12" nzMd="8" nzLg="8" nzXl="8" nzXXl="4">
+          <div class="menu-item">
+            <img src="assets/images/carbonara.jpg" alt="Spaghetti Carbonara">
+            <h3>Spaghetti Carbonara</h3>
+          </div>
+        </nz-col>
+        <nz-col nzSpan="16" nzXs="24" nzSm="12" nzMd="8" nzLg="8" nzXl="8" nzXXl="4">
+          <div class="menu-item">
+            <img src="assets/images/chocolate-cake.jpg" alt="Chocolate Cake">
+            <h3>Chocolate Cake</h3>
+          </div>
+        </nz-col>
+      </nz-row>
+    </div>
+  </section>
+  
+    <section class="contact">
+      <div class="contact-content">
+        <h2>Contact Us</h2>
+        <p>
+          Address: 1234 Culinary St, Food City, FC 56789<br>
+          Phone: (123) 456-7890<br>
+          Email: info&#64;bookabite.com
+        </p>
+      </div>
+    </section>
+  </div>
+  
+  
