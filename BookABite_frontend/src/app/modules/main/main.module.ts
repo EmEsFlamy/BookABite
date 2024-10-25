@@ -5,10 +5,11 @@ import { MainRoutingModule } from './main-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { MenuComponent } from './components/menu/menu.component';
 import { MainComponent } from './main.component';
+import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
-    declarations: [MainComponent, HomeComponent, MenuComponent],
+    declarations: [MainComponent, HomeComponent, MenuComponent, LoginComponent],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],

@@ -8,8 +8,8 @@
   </header>
 
    <section class="two-column-container">
-    <nz-row [nzGutter]="24" class="equal-height-row" nzAlign="middle">
-      <nz-col class="slider-col" nzSpan="14" nzXs="24" nzMd="14">
+    <nz-row [nzGutter]="24" nzAlign="middle">
+      <nz-col nzSpan="14" nzXs="24" nzMd="14">
         <div class="slider">
           <nz-carousel nzEffect="scrollx">
             <div nz-carousel-content *ngFor="let nmb of array">
@@ -18,12 +18,14 @@
           </nz-carousel>
         </div>
       </nz-col>
-      <nz-col class="about-col" nzSpan="10"nzXs="24" nzMd="10">
+      <nz-col nzSpan="10"nzXs="24" nzMd="10">
         <div class="about">
           <div class="about-content">
             <h2>About Us</h2>
             <p>
-              Welcome to BookABite, where passion meets flavor! We are dedicated to offering a unique culinary experience, combining the freshest ingredients with expert craftsmanship. Each dish we create is a celebration of flavors, carefully curated by our talented chefs who are committed to perfection in every bite.
+              Welcome to BookABite, where passion meets flavor!<br>
+              We are dedicated to offering a unique culinary experience, combining the freshest ingredients with expert craftsmanship.<br> 
+              Each dish we create is a celebration of flavors, carefully curated by our talented chefs who are committed to perfection in every bite.
             </p>
           </div>
         </div>
@@ -63,7 +65,8 @@
         <p>
           Address: 1234 Culinary St, Food City, FC 56789<br>
           Phone: (123) 456-7890<br>
-          Email: info&#64;bookabite.com
+          Email: info&#64;bookabite.com<br>
+          For employees: <a (click)="openLoginModal(); $event.preventDefault();">Login</a>
         </p>
       </div>
     </section>

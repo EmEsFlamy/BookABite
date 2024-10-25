@@ -3,11 +3,11 @@ import pl from '@angular/common/locales/pl';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { MainModule } from './modules/main/main.module';
+import { IconService } from './modules/shared/IconService';
 
 registerLocaleData(pl);
 
@@ -23,6 +23,7 @@ registerLocaleData(pl);
         SharedModule
     ],
     providers: [
+        IconService
     ],
     bootstrap: [AppComponent],
 })

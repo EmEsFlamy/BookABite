@@ -7,7 +7,7 @@ import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {NzDatePickerModule} from 'ng-zorro-antd/date-picker';
 import {NzFormModule} from 'ng-zorro-antd/form';
 import {NzGridModule} from 'ng-zorro-antd/grid';
-import {NzIconModule} from 'ng-zorro-antd/icon';
+import {NzIconModule, NzIconService} from 'ng-zorro-antd/icon';
 import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {NzLayoutModule} from 'ng-zorro-antd/layout';
@@ -34,6 +34,11 @@ import {NzBadgeModule} from 'ng-zorro-antd/badge';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzCascaderModule} from 'ng-zorro-antd/cascader';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import {
+    CoffeeOutline,
+    AppstoreOutline
+  } from '@ant-design/icons-angular/icons';
+import { IconDefinition } from '@ant-design/icons-angular';
 
 const importedModules = [
     NzAlertModule,
@@ -72,8 +77,14 @@ const importedModules = [
     NzCarouselModule
 ];
 
+const icons: IconDefinition[] = [
+    CoffeeOutline,
+    AppstoreOutline
+  ];
+  
+
 @NgModule({
-    imports: [CommonModule, ...importedModules],
+    imports: [CommonModule, NzIconModule.forChild(icons), ...importedModules],
     exports: [...importedModules],
     providers: [
         {
@@ -81,7 +92,10 @@ const importedModules = [
             useValue: {
                 disabled: true,
             },
-        },
+        }
     ],
+    
 })
-export class CustomNgZorroModule {}
+export class CustomNgZorroModule {
+
+}
