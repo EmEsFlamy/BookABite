@@ -2,11 +2,7 @@
 using DOMAIN.Repositories;
 using DOMAIN.Services;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace APPLICATION.Services
 {
@@ -32,19 +28,47 @@ namespace APPLICATION.Services
 
         public async Task<bool> DeleteAsync(int reservationId)
         {
+            _logger.LogInformation("Reservation deleting");
             var result = await _reservationRepository.DeleteAsync(reservationId);
+            if (!result)
+            {
+                _logger.LogError("Reservation deleting failed");
+            }
+            else
+            {
+                _logger.LogInformation("Reservation deleting succed");
+            }
+
             return result;
         }
 
         public async Task<Reservation> GetByIdAsync(int reservationId)
         {
+            _logger.LogInformation("Getting reservation");
             var result = await _reservationRepository.GetByIdAsync(reservationId);
+            if (result is null)
+            {
+                _logger.LogError("Getting reservation failed");
+            }
+            else
+            {
+                _logger.LogInformation("Getting reservation succed");
+            }
             return result;
         }
 
         public Task<Reservation> UpdateAsync(Reservation reservation)
         {
+            _logger.LogInformation("Updating reservation");
             var result = _reservationRepository.UpdateAsync(reservation);
+            if (result is null)
+            {
+                _logger.LogError("Updating reservation failed");
+            }
+            else
+            {
+                _logger.LogInformation("Updating reservation succed");
+            }
             return result;
         }
     }
