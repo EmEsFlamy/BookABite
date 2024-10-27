@@ -131,3 +131,11 @@
   font-size: 1rem;
   line-height: 1.5;
 }
+
+.ant-modal-content {
+  border-radius: 20px;
+}
+
+.ant-modal {
+  border-radius: 20px;
+}
