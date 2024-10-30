@@ -34,6 +34,17 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAsync()
+        {
+            var result = await _reservationService.GetAsync();
+            if (result is null || !result.Any())
+            {
+                return NotFound("No reservations found");
+            }
+            return Ok(result);
+        }
+
         [HttpPut]
         public async Task<IActionResult> UpdateAsync(Reservation reservation)
         {

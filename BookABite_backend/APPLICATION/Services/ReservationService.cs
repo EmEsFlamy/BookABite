@@ -42,6 +42,22 @@ namespace APPLICATION.Services
             return result;
         }
 
+        public async Task<List<Reservation>> GetAsync()
+        {
+            _logger.LogInformation("Getting all reservations");
+            var result = await _reservationRepository.GetAsync();
+            if (result == null || !result.Any())
+            {
+                _logger.LogWarning("No reservations found");
+            }
+            else
+            {
+                _logger.LogInformation($"Found {result.Count} reservations");
+            }
+            return result;
+        }
+
+
         public async Task<Reservation> GetByIdAsync(int reservationId)
         {
             _logger.LogInformation("Getting reservation");
