@@ -9,5 +9,5 @@ public interface IMenuRepository
     Task<Menu> CreateAsync(Menu menu);
     Task<Menu> UpdateAsync(Menu menu);
     Task<bool> DeleteAsync(Menu menu);
-    Task GetAsync();
+    Task<List<Menu>> GetAsync();
 }

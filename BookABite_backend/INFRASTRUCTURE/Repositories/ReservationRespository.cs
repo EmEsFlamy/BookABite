@@ -2,11 +2,7 @@
 using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace INFRASTRUCTURE.Repositories;
 
@@ -15,6 +11,18 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
     private readonly BookABiteDbContext _dbContext = dbContext;
     public async Task<Reservation> CreateAsync(Reservation reservation)
     {
+        var availableTable = await _dbContext.Tables
+        .Where(t => !_dbContext.Reservations
+            .Any(r => r.TableId == t.Id
+                      && r.ReservationTime == reservation.ReservationTime
+                      && r.IsActive))
+        .FirstOrDefaultAsync();
+
+        if (availableTable == null)
+        {
+            throw new InvalidOperationException("No available tables at the requested time.");
+        }
+
         var r = new Entities.Reservation()
         {
             ReservationTime = reservation.ReservationTime,
@@ -23,8 +31,9 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             ClientName = reservation.ClientName,
             ClientSurname = reservation.ClientSurname,
             ClientPhoneNumber = reservation.ClientPhoneNumber,
-            TableId = 1 // TODO: ustawiać dynamicznie
+            TableId = availableTable.Id 
         };
+
         await _dbContext.Reservations.AddAsync(r);
         await _dbContext.SaveChangesAsync();
         reservation.Id = r.Id;
@@ -44,9 +53,20 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         return true;
     }
 
-    public Task GetAsync()
+    public async Task<List<Reservation>> GetAsync()
     {
-        throw new NotImplementedException();
+        var reservations = await _dbContext.Reservations.AsNoTracking().ToListAsync();
+
+        return reservations.Select(r => new Reservation
+        {
+            Id = r.Id,
+            ReservationTime = r.ReservationTime,
+            IsActive = r.IsActive,
+            IsCompleted = r.IsCompleted,
+            ClientName = r.ClientName,
+            ClientSurname = r.ClientSurname,
+            ClientPhoneNumber = r.ClientPhoneNumber
+        }).ToList();
     }
 
     public async Task<Reservation> GetByIdAsync(int reservationId)

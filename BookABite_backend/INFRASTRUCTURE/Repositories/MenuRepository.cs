@@ -37,10 +37,18 @@ public class MenuRepository(BookABiteDbContext dbContext) : IMenuRepository
         return true;
     }
 
-    public Task GetAsync()
+    public async Task<List<Menu>> GetAsync()
     {
-        throw new NotImplementedException();
+        var menus = await _dbContext.Menus.AsNoTracking().ToListAsync();
+
+        return menus.Select(m => new Menu
+        {
+            Id = m.Id,
+            FoodName = m.FoodName,
+            Price = m.Price
+        }).ToList();
     }
+
 
     public async Task<Menu> GetByIdAsync(int menuId)
     {

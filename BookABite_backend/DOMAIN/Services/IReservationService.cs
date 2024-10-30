@@ -13,5 +13,6 @@ namespace DOMAIN.Services
         Task<Reservation> CreateAsync(Reservation reservation);
         Task<Reservation> UpdateAsync(Reservation reservation);
         Task<bool> DeleteAsync(int reservationId);
+        Task<List<Reservation>> GetAsync();
     }
 }
