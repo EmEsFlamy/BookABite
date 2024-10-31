@@ -14,6 +14,7 @@ namespace APPLICATION
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IMenuService, MenuService>();
             return services;
         }
     }

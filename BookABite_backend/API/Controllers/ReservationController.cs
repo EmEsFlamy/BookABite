@@ -38,7 +38,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetAsync()
         {
             var result = await _reservationService.GetAsync();
-            if (result is null || !result.Any())
+            if (result is null)
             {
                 return NotFound("No reservations found");
             }
