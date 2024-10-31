@@ -14,9 +14,9 @@ namespace APPLICATION.Services
             return result;
         }
 
-        public async Task<bool> DeleteAsync(Menu menu)
+        public async Task<bool> DeleteAsync(int menuId)
         {
-            var result = await _menuRepository.DeleteAsync(menu);
+            var result = await _menuRepository.DeleteAsync(menuId);
             return result;
         }
 

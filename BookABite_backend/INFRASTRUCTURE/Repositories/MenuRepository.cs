@@ -24,9 +24,9 @@ public class MenuRepository(BookABiteDbContext dbContext) : IMenuRepository
 
     }
 
-    public async Task<bool> DeleteAsync(Menu menu)
+    public async Task<bool> DeleteAsync(int menuId)
     {
-        var er = await _dbContext.Menus.SingleOrDefaultAsync(r => r.Id == menu.Id);
+        var er = await _dbContext.Menus.SingleOrDefaultAsync(r => r.Id == menuId);
 
         if (er is null)
         {
