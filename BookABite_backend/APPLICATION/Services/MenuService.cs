@@ -28,11 +28,8 @@ namespace APPLICATION.Services
 
         public async Task<bool> DeleteAsync(int menuId)
         {
-<<<<<<< Updated upstream
             var result = await _menuRepository.DeleteAsync(menuId);
-=======
             _logger.LogInformation("Dish deleting");
-            var result = await _menuRepository.DeleteAsync(menuId);
             if (!result)
             {
                 _logger.LogError("Dish deleting failed");
@@ -42,7 +39,6 @@ namespace APPLICATION.Services
                 _logger.LogInformation("Dish deleting succed");
             }
             
->>>>>>> Stashed changes
             return result;
         }
 
