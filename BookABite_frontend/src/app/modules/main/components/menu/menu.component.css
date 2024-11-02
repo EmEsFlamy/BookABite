@@ -1,5 +1,5 @@
 .menu {
-    background-image: url('../../../../../assets/images/background3.jpg');
+    background-image: url('../../../../../assets/images/background4.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -8,7 +8,7 @@
     align-items: center;
     height: 100%;
     padding: 30px;
-    color: #333;
+    color: #f9f9f9;
     overflow: hidden;
 }
 
@@ -33,6 +33,12 @@ html, body {
 
 .category-icons .icon:hover {
     color: #ff7043; 
+}
+
+h2{
+    color: #f9f9f9;
+    font-family: 'Lucida Handwriting', 'cursive';
+    font-size: 40px;
 }
 
 .menu-content {
