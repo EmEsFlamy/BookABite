@@ -11,6 +11,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<User> CreateAsync(User user)
     {
+        // TODO hash password
         var result = await _userRepository.CreateAsync(user);
         return result;
     }
@@ -21,18 +22,27 @@ public class UserService(IUserRepository userRepository) : IUserService
         return result;
     }
 
-    public Task<List<User>> GetAsync()
+    public async Task<List<User>> GetAsync()
     {
-        throw new NotImplementedException();
+        var result = await _userRepository.GetAsync();
+        return result;
     }
 
-    public Task<User> GetByIdAsync(int userId)
+    public async Task<User> GetByIdAsync(int userId)
     {
-        throw new NotImplementedException();
+        var result = await _userRepository.GetByIdAsync(userId);
+        return result;
     }
 
-    public Task<User> UpdateAsync(User user)
+    public async Task<User> GetByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        var result = await _userRepository.GetByEmailAsync(email);
+        return result;
+    }
+
+    public async Task<User> UpdateAsync(User user)
+    {
+        var result = await _userRepository.UpdateAsync(user);
+        return result;
     }
 }
