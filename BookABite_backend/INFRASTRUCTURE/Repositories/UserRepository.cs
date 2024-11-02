@@ -65,6 +65,19 @@ namespace INFRASTRUCTURE.Repositories
             };
         }
 
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            var r = await _dbContext.Users.AsNoTracking().SingleOrDefaultAsync(user => user.Email == email);
+            return r is null ? null! : new User
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Surname = r.Surname,
+                Email = r.Email,
+                Password = r.Password
+            };
+        }
+
         public async Task<User> UpdateAsync(User user)
         {
             var er = await _dbContext.Users.FirstOrDefaultAsync(r => r.Id == user.Id);
@@ -82,5 +95,7 @@ namespace INFRASTRUCTURE.Repositories
             await _dbContext.SaveChangesAsync();
             return user;    
         }
+
+        
     }
 }

@@ -11,6 +11,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<User> CreateAsync(User user)
     {
+        // TODO hash password
         var result = await _userRepository.CreateAsync(user);
         return result;
     }
@@ -30,6 +31,12 @@ public class UserService(IUserRepository userRepository) : IUserService
     public async Task<User> GetByIdAsync(int userId)
     {
         var result = await _userRepository.GetByIdAsync(userId);
+        return result;
+    }
+
+    public async Task<User> GetByEmailAsync(string email)
+    {
+        var result = await _userRepository.GetByEmailAsync(email);
         return result;
     }
 

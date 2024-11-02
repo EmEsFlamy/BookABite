@@ -2,6 +2,7 @@
 using DOMAIN.Models;
 using DOMAIN.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace API.Controllers;
 
@@ -11,13 +12,42 @@ public class UserController(IUserService userService) : ControllerBase
 {
     private readonly IUserService _userService = userService;
 
-    [HttpPost]
-    public async Task<IActionResult> CreateAsync(User user)
+    [HttpPost("register")]
+    public async Task<IActionResult> RegisterAsync(UserRegistration userRegistration)
     {
+        var user = new User
+        {
+            Name = userRegistration.Name,
+            Surname = userRegistration.Surname,
+            Email = userRegistration.Email,
+            Password = Encoding.UTF8.GetBytes(userRegistration.Password)
+        };
+
+        var existingUser = await _userService.GetByEmailAsync(userRegistration.Email);
+
+        if (existingUser is not null) 
+        {
+            BadRequest("User with your e-mail already exist!");
+        }
         var result = await _userService.CreateAsync(user);
         if (result is null)
         {
             return BadRequest("Something went wrong during user creation!");
+        }
+        return Ok(result);
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> LoginAsync(UserLogin userLogin)
+    {
+        var result = await _userService.GetByEmailAsync(userLogin.Email);
+        if (result is null)
+        {
+            return NotFound("User not found!");
+        }
+        if (!result.Password.SequenceEqual(Encoding.UTF8.GetBytes(userLogin.Password)))
+        {
+            return BadRequest("Password do not match!");
         }
         return Ok(result);
     }
