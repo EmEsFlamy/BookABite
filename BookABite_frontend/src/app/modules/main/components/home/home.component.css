@@ -60,8 +60,7 @@
 }
 
 .slider {
-  min-height: 600px;
-  max-height: 600px;
+ height: 600px;
 }
 
 [nz-carousel-content] {
