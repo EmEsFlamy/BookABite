@@ -16,12 +16,16 @@
   text-align: center;
 }
 
-.menu-highlights, .gallery, .contact, .two-column-container, .login-container {
+.main {
   background-image: url('../../../../../assets/images/background3.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: black;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .hero-banner .hero-content h1 {

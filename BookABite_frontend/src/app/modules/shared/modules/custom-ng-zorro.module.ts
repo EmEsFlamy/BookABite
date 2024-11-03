@@ -36,7 +36,10 @@ import {NzCascaderModule} from 'ng-zorro-antd/cascader';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import {
     CoffeeOutline,
-    AppstoreOutline
+    AppstoreOutline,
+    InstagramFill,
+    TwitterOutline,
+    FacebookFill
   } from '@ant-design/icons-angular/icons';
 import { IconDefinition } from '@ant-design/icons-angular';
 
@@ -79,7 +82,10 @@ const importedModules = [
 
 const icons: IconDefinition[] = [
     CoffeeOutline,
-    AppstoreOutline
+    AppstoreOutline,
+    FacebookFill,
+    InstagramFill,
+    TwitterOutline,
   ];
   
 
