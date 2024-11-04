@@ -21,7 +21,7 @@ namespace APPLICATION.Services
             }
             else
             {
-                _logger.LogError("Dish creating succed");
+                _logger.LogInformation("Dish creating succed");
             }
             return result;
         }
