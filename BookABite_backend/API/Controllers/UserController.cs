@@ -1,16 +1,20 @@
 ﻿using APPLICATION.Services;
 using DOMAIN.Models;
 using DOMAIN.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
 namespace API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class UserController(IUserService userService) : ControllerBase
+public class UserController(IUserService userService, IJwtTokenGenerator jwtTokenGenerator) : ControllerBase
 {
     private readonly IUserService _userService = userService;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+
 
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(UserRegistration userRegistration)
@@ -37,9 +41,11 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync(UserLogin userLogin)
     {
+
         var result = await _userService.GetByEmailAsync(userLogin.Email);
         if (result is null)
         {
@@ -49,7 +55,8 @@ public class UserController(IUserService userService) : ControllerBase
         {
             return BadRequest("Password do not match!");
         }
-        return Ok(result);
+        var token = _jwtTokenGenerator.GenerateToken(result.Id, result.Name + " " + result.Surname);
+        return Ok(token);
     }
 
     [HttpGet]
