@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddControllers();
 builder.Host.UseSerilog((ctx, conf) =>
@@ -33,6 +34,8 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler(opt => { });
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

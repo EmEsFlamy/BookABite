@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReservationController(IReservationService reservationService) : ControllerBase
     {
         private readonly IReservationService _reservationService = reservationService;
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Reservation reservation)
         {
