@@ -1,0 +1,53 @@
+<div class="contact">
+    <div class="restaurant-container">
+      <nz-layout>
+        <!-- Sidebar with restaurant list -->
+        <nz-sider [nzWidth]="350" nzTheme="light" class="restaurant-sider">
+          <div class="sider-title">Restaurants</div>
+          <ul class="restaurant-list">
+            <li 
+              *ngFor="let restaurant of restaurantOptions; let i = index"
+              (click)="selectRestaurant(i)"
+              [ngClass]="{'selected': restaurant === selectedRestaurant}"
+              class="restaurant-item"
+            >
+              {{ restaurant.name }}
+            </li>
+          </ul>
+        </nz-sider>
+    
+        <!-- Main content layout -->
+        <nz-layout>
+          <nz-content class="restaurant-content">
+            <div class="restaurant-details">
+              <h2>{{ selectedRestaurant.name }}</h2>
+              <p>{{ selectedRestaurant.address }}</p>
+              <h3>Opening Hours:</h3>
+              <ul class="open-hours">
+                <li *ngFor="let hour of selectedRestaurant.hours">{{ hour }}</li>
+              </ul>
+              <div class="contact-info">
+                <p>Phone: {{ selectedRestaurant.phone }}</p>
+              </div>
+            </div>
+            <div class="restaurant-photo">
+              <img [src]="selectedRestaurant.photoUrl" alt="{{ selectedRestaurant.name }}" />
+            </div>
+          </nz-content>
+    
+          <!-- Footer with map -->
+          <nz-footer class="restaurant-map">
+            <iframe
+              [src]="selectedRestaurant.mapUrl | safeUrl"
+              width="100%"
+              height="300"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+            ></iframe>
+          </nz-footer>
+        </nz-layout>
+      </nz-layout>
+    </div>
+  </div>
+  

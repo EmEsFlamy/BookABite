@@ -7,10 +7,12 @@ import { MenuComponent } from './components/menu/menu.component';
 import { MainComponent } from './main.component';
 import { LoginComponent } from './components/login/login.component';
 import { AboutComponent } from './components/about/about.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { SafeUrlPipe } from '../../safe-url.pipe';
 
 
 @NgModule({
-    declarations: [MainComponent, HomeComponent, MenuComponent, LoginComponent, AboutComponent],
+    declarations: [MainComponent, HomeComponent, MenuComponent, LoginComponent, AboutComponent, ContactComponent, SafeUrlPipe],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],

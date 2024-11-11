@@ -1,14 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { NzIconService } from 'ng-zorro-antd/icon';
 
+interface Category {
+  name: string;
+  icon: string;
+}
+
+interface MenuItem {
+  name: string;
+  price: string;
+}
+
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+  styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit {
 
-  categories = [
+  categories: Category[] = [
     { name: 'Starters', icon: 'custom-starters:antd' },
     { name: 'Soups', icon: 'custom-soups:antd' },
     { name: 'Main', icon: 'custom-main:antd' },
@@ -18,84 +28,88 @@ export class MenuComponent implements OnInit {
     { name: 'Alcohol', icon: 'custom-alcohol:antd' },
   ];
 
-  starterItems = [
-    { name: 'Mozzarella Sticks', price: '$6.99' },
-    { name: 'Garlic Bread', price: '$4.99' },
-    { name: 'Chicken Wings', price: '$7.99' },
-    { name: 'Cheese Nachos', price: '$5.99' },
-    { name: 'Loaded Potato Skins', price: '$6.50' },
-    { name: 'Spring Rolls', price: '$4.99' },
-    { name: 'Stuffed Mushrooms', price: '$6.99' },
-    { name: 'Buffalo Cauliflower', price: '$5.50' },
-    { name: 'Mini Tacos', price: '$5.99' },
-  ];
+  menuItems = {
+    starters: [
+      { name: 'Mozzarella Sticks', price: '$6.99' },
+      { name: 'Garlic Bread', price: '$4.99' },
+      { name: 'Chicken Wings', price: '$7.99' },
+      { name: 'Cheese Nachos', price: '$5.99' },
+      { name: 'Loaded Potato Skins', price: '$6.50' },
+      { name: 'Spring Rolls', price: '$4.99' },
+      { name: 'Stuffed Mushrooms', price: '$6.99' },
+      { name: 'Buffalo Cauliflower', price: '$5.50' },
+      { name: 'Mini Tacos', price: '$5.99' },
+    ],
+  
+    soups: [
+      { name: 'Tomato Basil Soup', price: '$4.50' },
+      { name: 'Chicken Noodle Soup', price: '$5.50' },
+      { name: 'Minestrone Soup', price: '$4.75' },
+      { name: 'French Onion Soup', price: '$5.25' },
+      { name: 'Cream of Mushroom Soup', price: '$4.99' },
+      { name: 'Lentil Soup', price: '$4.50' },
+      { name: 'Clam Chowder', price: '$6.25' },
+    ],
+  
+    main: [
+      { name: 'Grilled Salmon', price: '$15.99' },
+      { name: 'Steak and Fries', price: '$19.99' },
+      { name: 'Pasta Primavera', price: '$12.99' },
+      { name: 'BBQ Ribs', price: '$17.99' },
+      { name: 'Chicken Alfredo', price: '$14.50' },
+      { name: 'Vegetarian Pizza', price: '$10.99' },
+      { name: 'Margherita Pizza', price: '$9.99' },
+      { name: 'Cheeseburger', price: '$11.50' },
+      { name: 'Beef Tacos', price: '$8.99' },
+    ],
+  
+    kids: [
+      { name: 'Mini Cheeseburger', price: '$5.99' },
+      { name: 'Chicken Fingers', price: '$4.99' },
+      { name: 'Grilled Cheese', price: '$3.99' },
+      { name: 'Kids Pizza', price: '$4.99' },
+      { name: 'Pasta with Butter', price: '$3.50' },
+      { name: 'Mac and Cheese', price: '$4.25' },
+    ],
+  
+    salads: [
+      { name: 'Caesar Salad', price: '$7.99' },
+      { name: 'Greek Salad', price: '$8.99' },
+      { name: 'House Salad', price: '$6.50' },
+      { name: 'Cobb Salad', price: '$9.99' },
+      { name: 'Spinach Salad', price: '$8.25' },
+      { name: 'Avocado Salad', price: '$7.99' },
+    ],
+  
+    drinks: [
+      { name: 'Coke', price: '$1.99' },
+      { name: 'Fresh Orange Juice', price: '$2.99' },
+      { name: 'Sparkling Water', price: '$2.50' },
+      { name: 'Apple Juice', price: '$2.99' },
+      { name: 'Iced Tea', price: '$2.25' },
+      { name: 'Lemonade', price: '$2.75' },
+      { name: 'Hot Chocolate', price: '$3.25' },
+    ],
+  
+    alcohol: [
+      { name: 'House Wine', price: '$5.99' },
+      { name: 'Craft Beer', price: '$4.50' },
+      { name: 'Gin and Tonic', price: '$6.99' },
+      { name: 'Mojito', price: '$7.50' },
+      { name: 'Whiskey Sour', price: '$7.75' },
+      { name: 'Martini', price: '$8.25' },
+      { name: 'Pina Colada', price: '$6.99' },
+      { name: 'Tequila Sunrise', price: '$7.25' },
+    ],
+  }
 
-  soupItems = [
-    { name: 'Tomato Basil Soup', price: '$4.50' },
-    { name: 'Chicken Noodle Soup', price: '$5.50' },
-    { name: 'Minestrone Soup', price: '$4.75' },
-    { name: 'French Onion Soup', price: '$5.25' },
-    { name: 'Cream of Mushroom Soup', price: '$4.99' },
-    { name: 'Lentil Soup', price: '$4.50' },
-    { name: 'Clam Chowder', price: '$6.25' },
-  ];
 
-  mainItems = [
-    { name: 'Grilled Salmon', price: '$15.99' },
-    { name: 'Steak and Fries', price: '$19.99' },
-    { name: 'Pasta Primavera', price: '$12.99' },
-    { name: 'BBQ Ribs', price: '$17.99' },
-    { name: 'Chicken Alfredo', price: '$14.50' },
-    { name: 'Vegetarian Pizza', price: '$10.99' },
-    { name: 'Margherita Pizza', price: '$9.99' },
-    { name: 'Cheeseburger', price: '$11.50' },
-    { name: 'Beef Tacos', price: '$8.99' },
-  ];
-
-  kidsItems = [
-    { name: 'Mini Cheeseburger', price: '$5.99' },
-    { name: 'Chicken Fingers', price: '$4.99' },
-    { name: 'Grilled Cheese', price: '$3.99' },
-    { name: 'Kids Pizza', price: '$4.99' },
-    { name: 'Pasta with Butter', price: '$3.50' },
-    { name: 'Mac and Cheese', price: '$4.25' },
-  ];
-
-  saladItems = [
-    { name: 'Caesar Salad', price: '$7.99' },
-    { name: 'Greek Salad', price: '$8.99' },
-    { name: 'House Salad', price: '$6.50' },
-    { name: 'Cobb Salad', price: '$9.99' },
-    { name: 'Spinach Salad', price: '$8.25' },
-    { name: 'Avocado Salad', price: '$7.99' },
-  ];
-
-  drinkItems = [
-    { name: 'Coke', price: '$1.99' },
-    { name: 'Fresh Orange Juice', price: '$2.99' },
-    { name: 'Sparkling Water', price: '$2.50' },
-    { name: 'Apple Juice', price: '$2.99' },
-    { name: 'Iced Tea', price: '$2.25' },
-    { name: 'Lemonade', price: '$2.75' },
-    { name: 'Hot Chocolate', price: '$3.25' },
-  ];
-
-  alcoholItems = [
-    { name: 'House Wine', price: '$5.99' },
-    { name: 'Craft Beer', price: '$4.50' },
-    { name: 'Gin and Tonic', price: '$6.99' },
-    { name: 'Mojito', price: '$7.50' },
-    { name: 'Whiskey Sour', price: '$7.75' },
-    { name: 'Martini', price: '$8.25' },
-    { name: 'Pina Colada', price: '$6.99' },
-    { name: 'Tequila Sunrise', price: '$7.25' },
-  ];
-
-  selectedCategory: any = this.categories[0];
-  selectedItems: any[] = this.starterItems;
-  allItems: any[] = [];
-  leftItems: any[] = [];
-  rightItems: any[] = [];
+  selectedCategory: Category = this.categories[0];
+  selectedItems: MenuItem[] = this.menuItems.starters;
+  allItems: MenuItem[] = [];
+  leftItems: MenuItem[] = [];
+  rightItems: MenuItem[] = [];
+  fadeIn = true;
 
   constructor(private iconService: NzIconService) {
     this.iconService.addIconLiteral(
@@ -134,7 +148,7 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.allItems = this.starterItems;
+    this.allItems = this.menuItems.starters;
     this.splitItems();
   }
 
@@ -144,39 +158,40 @@ export class MenuComponent implements OnInit {
     this.rightItems = this.allItems.slice(midIndex);
   }
 
+
   onCategoryChange(category: { name: string; icon: string }): void {
     this.selectedCategory = category;
     switch (category.name) {
       case 'Starter':
-        this.allItems = this.starterItems;
+        this.allItems = this.menuItems.starters;
         this.splitItems();
         break;
       case 'Drinks':
-        this.allItems = this.drinkItems;
+        this.allItems = this.menuItems.drinks;
         this.splitItems();
         break;
       case 'Soups':
-        this.allItems = this.soupItems;
+        this.allItems = this.menuItems.soups;
         this.splitItems();
         break;
       case 'Main':
-        this.allItems = this.mainItems;
+        this.allItems = this.menuItems.main;
         this.splitItems();
         break;
       case 'Kids':
-        this.allItems = this.kidsItems;
+        this.allItems = this.menuItems.kids;
         this.splitItems();
         break;
       case 'Salads':
-        this.allItems = this.saladItems;
+        this.allItems = this.menuItems.salads;
         this.splitItems();
         break;
       case 'Alcohol':
-        this.allItems = this.alcoholItems;
+        this.allItems = this.menuItems.alcohol;
         this.splitItems();
         break;
       default:
-        this.allItems = this.starterItems;
+        this.allItems = this.menuItems.starters;
         this.splitItems();
     }
   }

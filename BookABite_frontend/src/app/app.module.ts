@@ -12,7 +12,8 @@ import { IconService } from './modules/shared/IconService';
 registerLocaleData(pl);
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [
+        AppComponent],
     imports: [
         // vendor modules
         BrowserModule,

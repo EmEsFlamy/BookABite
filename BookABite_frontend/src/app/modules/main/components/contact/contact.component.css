@@ -1,0 +1,142 @@
+body{
+  color: #fff;
+  background-color: #222;
+}
+
+.contact {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  }
+
+  .contact::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../../../../../assets/images/background1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a' x='0' y='0' width='1' height='1' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='4' result='b'/%3E%3CfeMorphology operator='dilate' radius='4'/%3E %3CfeMerge%3E%3CfeMergeNode/%3E%3CfeMergeNode in='b'/%3E%3C/feMerge%3E%3C/filter%3E %3C/svg%3E#a");
+    z-index: 0;
+  }
+
+  .contact * {
+    position: relative;
+    z-index: 1;
+}
+  
+  .ant-layout {
+    background: transparent !important;
+  }
+  
+  .ant-layout-footer {
+    background: transparent !important;
+    padding: 20px;
+  }
+  
+  .restaurant-container {
+    margin: 0 18%;
+    padding-top: 5%;
+    background: none;
+    color: #fff;
+  }
+  
+  .restaurant-sider {
+    padding: 20px 0;
+    background: transparent;
+  }
+  
+  .sider-title {
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .restaurant-list {
+    list-style: none;
+    padding: 20px 25px;
+    font-size: 18px;
+    font-weight: 700;
+    border: solid transparent;
+    cursor: pointer;
+    background: transparent;
+  }
+  
+  .restaurant-list li {
+    padding: 10px 20px;
+    background: transparent;
+  }
+  
+  .restaurant-list li:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .restaurant-list li.selected {
+    text-decoration: underline;
+    font-weight: bold;  
+  }
+  
+  .restaurant-content {
+    display: flex;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 800px;
+    padding-top: 125px;
+    margin-left: 100px;
+  }
+  
+  .restaurant-details {
+    flex: 1;
+    padding-right: 20px;
+  }
+  
+  .restaurant-details h2 {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1em;
+    color: #fff;
+  }
+  
+  .restaurant-details h3 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1em;
+    color: #fff;
+  }
+  
+  .restaurant-details p {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .open-hours li{
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .restaurant-photo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .restaurant-photo img {
+    max-width: 400px;
+    max-height: 250px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .restaurant-map {
+    margin-top: 5px;
+    text-align: center;
+    max-width: 800px;
+    margin-left: 100px;
+  }
+  
