@@ -1,6 +1,7 @@
 ﻿using DOMAIN.Models;
 using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
+using INFRASTRUCTURE.Enums;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -17,7 +18,8 @@ namespace INFRASTRUCTURE.Repositories
                 Name = user.Name,
                 Surname = user.Surname,
                 Email = user.Email,
-                Password = user.Password
+                Password = user.Password,
+                UserType = (UserTypeEnum)user.UserType
             };
             await _dbContext.Users.AddAsync(r);
             await _dbContext.SaveChangesAsync();

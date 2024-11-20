@@ -24,7 +24,8 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
             Name = userRegistration.Name,
             Surname = userRegistration.Surname,
             Email = userRegistration.Email,
-            Password = Encoding.UTF8.GetBytes(userRegistration.Password)
+            Password = Encoding.UTF8.GetBytes(userRegistration.Password),
+            UserType = userRegistration.UserType
         };
 
         var existingUser = await _userService.GetByEmailAsync(userRegistration.Email);
