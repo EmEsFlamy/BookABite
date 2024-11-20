@@ -19,6 +19,17 @@ builder.Host.UseSerilog((ctx, conf) =>
     conf.ReadFrom.Configuration(ctx.Configuration);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(b =>
+    {
+        b
+        .WithOrigins(builder.Configuration["CorsSettings:DefaultOrigin"]!)
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -40,5 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();
