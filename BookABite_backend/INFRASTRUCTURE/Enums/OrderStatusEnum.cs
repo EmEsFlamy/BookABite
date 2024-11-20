@@ -2,7 +2,7 @@
 
 namespace INFRASTRUCTURE.Enums
 {
-    public enum OrderStatus
+    public enum OrderStatusEnum
     {
         Ordered,
         Processing,

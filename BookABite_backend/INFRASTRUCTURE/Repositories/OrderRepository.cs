@@ -1,6 +1,7 @@
 ﻿using DOMAIN.Models;
 using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
+using INFRASTRUCTURE.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Repositories
@@ -12,7 +13,8 @@ namespace INFRASTRUCTURE.Repositories
         {
             var r = new Entities.Order()
             {
-                FullPrice = order.FullPrice
+                FullPrice = order.FullPrice,
+                OrderStatus = OrderStatusEnum.Ordered
             };
             await _dbContext.Orders.AddAsync(r);
             await _dbContext.SaveChangesAsync();
@@ -64,6 +66,7 @@ namespace INFRASTRUCTURE.Repositories
             }
 
            er.FullPrice = order.FullPrice;
+           er.OrderStatus = (OrderStatusEnum)order.OrderStatus;
 
             await _dbContext.SaveChangesAsync();
             return order;

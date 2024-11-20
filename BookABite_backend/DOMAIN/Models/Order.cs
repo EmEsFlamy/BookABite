@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DOMAIN.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace DOMAIN.Models
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Time { get; set; }
+
+        public OrderStatusEnum OrderStatus { get; set; }
     }
 }

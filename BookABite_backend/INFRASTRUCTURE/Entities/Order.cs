@@ -12,7 +12,7 @@ public class Order
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime Time { get; set; }
-    public OrderStatus OrderStatus { get; set; }
+    public OrderStatusEnum OrderStatus { get; set; }
 
     public ICollection<MenuOrder> OrdersMenu { get; set; }
 
