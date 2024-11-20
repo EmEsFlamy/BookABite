@@ -1,6 +1,7 @@
 ﻿using DOMAIN.Models;
 using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
+using INFRASTRUCTURE.Enums;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -16,7 +17,8 @@ public class MenuRepository(BookABiteDbContext dbContext) : IMenuRepository
         var r = new Entities.Menu()
         {
             FoodName = menu.FoodName,
-            Price = menu.Price
+            Price = menu.Price,
+            FoodType = (FoodTypeEnum)menu.FoodType
         };
         await _dbContext.Menus.AddAsync(r);
         await _dbContext.SaveChangesAsync();
