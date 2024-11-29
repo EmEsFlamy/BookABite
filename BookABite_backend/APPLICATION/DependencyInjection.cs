@@ -16,6 +16,8 @@ namespace APPLICATION
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ITableService, TableService>();
             return services;
         }
     }

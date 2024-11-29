@@ -5,21 +5,23 @@ services:
       context: "./BookABite_backend"
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - 8080:8080
     restart: unless-stopped
-    links:
+    #links:
+     # - db
+    depends_on:
       - db
   db:
     image: postgres:latest
     restart: always
     environment:
-      - POSTGRES_DB=docker
+      - POSTGRES_DB=postgres
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=docker
     ports:
       - 5433:5432
-    #volumes:
-    # - ./.containers/db:/var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
   seq:
     image: datalust/seq:latest
     environment: 
@@ -27,3 +29,8 @@ services:
     ports:
       - 5341:5341
       - 8081:80
+volumes:
+  db-data:
+#networks:
+  #default:
+    #driver: bridge

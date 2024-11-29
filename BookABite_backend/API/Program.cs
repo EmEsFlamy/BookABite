@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddCustomServices();
 builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddControllers();
@@ -33,14 +34,12 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<BookABiteDbContext>();
-    db.Database.Migrate();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
+app.ApplyMigrations();    
 
 app.UseExceptionHandler(opt => { });
 

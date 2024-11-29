@@ -4,6 +4,7 @@ using INFRASTRUCTURE.Auth;
 using INFRASTRUCTURE.Database;
 using INFRASTRUCTURE.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,11 +25,27 @@ public static class DependencyInjection
             options.UseNpgsql(conn);
         });
 
+        return services;
+    }
+
+    public static IServiceCollection AddCustomServices(this IServiceCollection services)
+    {
         services.AddScoped<IReservationRepository, ReservationRespository>();
         services.AddScoped<IMenuRepository, MenuRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITableRepository, TableRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
 
         return services;
+    }
+
+
+    public static WebApplication ApplyMigrations(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<BookABiteDbContext>();
+        db.Database.Migrate();
+        return app;
     }
 
     public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
