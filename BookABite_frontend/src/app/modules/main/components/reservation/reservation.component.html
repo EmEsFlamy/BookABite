@@ -1,0 +1,117 @@
+<div class="reservation-wrapper">
+  <h2 *ngIf="userRole === 'guest'">Table Reservation</h2>
+  <h2 *ngIf="userRole === 'waiter'">Waiter Management System</h2>
+
+  <!--GUEST-->
+  <ng-container *ngIf="userRole === 'guest'">
+    <div class="reservation-container">
+      <div *ngFor="let table of tables" class="table-box">
+        <button nz-button [nzType]="getStatusType(table.status)" [nzDanger]="table.status === 'Occupied'"
+          [disabled]="table.status === 'Cleaning'" class="table-button" (click)="onTableClick(table)">
+          {{ table.number }}
+        </button>
+      </div>
+    </div>
+    <nz-modal [(nzVisible)]="isModalVisible" nzTitle="Table Reservation" (nzOnCancel)="handleCancel()" [nzFooter]="null"
+      class="waiter-modal">
+      <ng-container *nzModalContent>
+        <ng-container *ngIf="currentStep === 1">
+          <p><strong>Table Number:</strong> {{ selectedTable?.number }}</p>
+          <p><strong>Status:</strong> {{ selectedTable?.status }}</p>
+          <p><strong>Seats:</strong> {{ selectedTable?.seats }}</p>
+          <button nz-button nzType="primary" (click)="goToStep(2)" class="confirm-button">Reserve</button>
+        </ng-container>
+
+        <ng-container *ngIf="currentStep === 2">
+          <div class="time-slot-selection">
+            <h3>Select Time Slots</h3>
+            <div class="time-slot-container">
+              <div *ngFor="let slot of timeSlots; let i = index" class="time-slot">
+                <button nz-button [nzType]="selectedSlots.includes(i) ? 'primary' : 'default'"
+                  (click)="onTimeSlotClick(i)">
+                  {{ slot }}
+                </button>
+              </div>
+            </div>
+            <button nz-button nzType="default" (click)="goToStep(1)" class="back-button">Back</button>
+            <button nz-button nzType="primary" [disabled]="!selectedSlots.length" (click)="confirmReservation()"
+              class="confirm-button">
+              Confirm Reservation
+            </button>
+          </div>
+        </ng-container>
+      </ng-container>
+    </nz-modal>
+  </ng-container>
+
+  <!--WAITER-->
+  <ng-container *ngIf="userRole === 'waiter'">
+    <div class="reservation-container">
+      <div *ngFor="let table of tables" class="table-box">
+        <button
+          nz-button
+          [nzType]="getStatusType(table.status)"
+          class="table-button"
+          (click)="onTableClick(table)"
+        >
+          {{ table.number }}
+        </button>
+      </div>
+    </div>
+    <nz-modal
+  [(nzVisible)]="isModalVisible"
+  nzTitle="Manage Table"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null"
+  class="waiter-modal"
+>
+  <ng-container *nzModalContent>
+    <div *ngIf="selectedTable">
+      <p><strong>Table Number:</strong> {{ selectedTable.number }}</p>
+      <p><strong>Seats:</strong> {{ selectedTable.seats }}</p>
+      <p><strong>Status:</strong> {{ selectedTable.status }}</p>
+      <p><strong>Current Order:</strong> {{ selectedTable.order || 'No orders assigned' }}</p>
+
+      <!-- Update Table Status -->
+      <h3>Update Table Status</h3>
+      <div class="status-buttons">
+        <button
+          *ngFor="let status of tableStatuses"
+          nz-button
+          [nzType]="status === selectedTable.status ? 'primary' : 'default'"
+          (click)="updateTableStatus(status)"
+        >
+          {{ status }}
+        </button>
+      </div>
+
+      <!-- Assign Order -->
+      <h3>Assign Order</h3>
+      <input
+        nz-input
+        placeholder="Enter order details"
+        [(ngModel)]="newOrder"
+        class="order-input"
+      />
+      <button
+        nz-button
+        nzType="primary"
+        (click)="assignOrderToTable(selectedTable)"
+        class="assign-order-button"
+      >
+        Assign Order
+      </button>
+      <button
+        nz-button
+        nzType="default"
+        (click)="handleCancel()"
+        class="assign-order-button"
+      >
+        OK
+      </button>
+    </div>
+  </ng-container>
+</nz-modal>
+  </ng-container>
+
+</div>

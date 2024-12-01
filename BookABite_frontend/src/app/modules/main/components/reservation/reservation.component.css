@@ -1,0 +1,177 @@
+.reservation-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5%;
+    background-image: url('../../../../../assets/images/background6.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    font-family: 'Lucida Handwriting', 'cursive';
+    font-size: 40px;
+    color: #f9f9f9;
+  }
+  
+  /* Main container for the tables */
+  .reservation-container {
+    width: 850px;
+    height: 750px;
+    display: grid;
+    grid-template-areas:
+      "t1 . t2 . t3 . t4 . t5 . t6 . t7"
+      "t31 . t8 . t9 . . . t10 . t11 . t34"
+      "t31 . t12 . t13 . . . t14 . t15 . t34"
+      "t30 . . . . . . . . . . . ."
+      "t29 . t16 . t17 . . . t18 . t19 . t33"
+      "t29 . t20 . t21 . . . t22 . t23 . t33"
+      "t28 . t24 . t25 . . . t26 . t27 . t32"
+      ;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+  /* Define specific positioning for each table based on the grid layout */
+  .table-box:nth-child(1) { grid-area: t1; }
+  .table-box:nth-child(2) { grid-area: t2; }
+  .table-box:nth-child(3) { grid-area: t3; }
+  .table-box:nth-child(4) { grid-area: t4; }
+  .table-box:nth-child(5) { grid-area: t5; }
+  .table-box:nth-child(6) { grid-area: t6; }
+  .table-box:nth-child(7) { grid-area: t7; }
+  .table-box:nth-child(31) { grid-area: t31; }
+  .table-box:nth-child(8) { grid-area: t8; }
+  .table-box:nth-child(9) { grid-area: t9; }
+  .table-box:nth-child(10) { grid-area: t10; }
+  .table-box:nth-child(11) { grid-area: t11; }
+  .table-box:nth-child(34) { grid-area: t34; }
+  .table-box:nth-child(12) { grid-area: t12; }
+  .table-box:nth-child(13) { grid-area: t13; }
+  .table-box:nth-child(14) { grid-area: t14; }
+  .table-box:nth-child(15) { grid-area: t15; }
+  .table-box:nth-child(30) { grid-area: t30; }
+  .table-box:nth-child(29) { grid-area: t29; }
+  .table-box:nth-child(16) { grid-area: t16; }
+  .table-box:nth-child(17) { grid-area: t17; }
+  .table-box:nth-child(18) { grid-area: t18; }
+  .table-box:nth-child(19) { grid-area: t19; }
+  .table-box:nth-child(33) { grid-area: t33; }
+  .table-box:nth-child(20) { grid-area: t20; }
+  .table-box:nth-child(21) { grid-area: t21; }
+  .table-box:nth-child(22) { grid-area: t22; }
+  .table-box:nth-child(23) { grid-area: t23; }
+  .table-box:nth-child(28) { grid-area: t28; }
+  .table-box:nth-child(24) { grid-area: t24; }
+  .table-box:nth-child(25) { grid-area: t25; }
+  .table-box:nth-child(26) { grid-area: t26; }
+  .table-box:nth-child(27) { grid-area: t27; }
+  .table-box:nth-child(32) { grid-area: t32; }
+
+  
+  .table-button {
+    width: 80px;
+    height: 40px;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 0;
+  }
+
+  .table-box:nth-child(31) .table-button,
+  .table-box:nth-child(30) .table-button,
+  .table-box:nth-child(33) .table-button,
+  .table-box:nth-child(32) .table-button,
+  .table-box:nth-child(34) .table-button,
+  .table-box:nth-child(29) .table-button,
+  .table-box:nth-child(28) .table-button{
+    width: 40px;
+    height: 80px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .table-box:nth-child(33) .table-button,
+  .table-box:nth-child(32) .table-button,
+  .table-box:nth-child(34) .table-button{
+    margin-left: 40px;
+  }
+  
+  .ant-btn-primary {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+    color: white;
+  }
+
+  .ant-btn-dangerous {
+    background-color: rgb(172, 148, 11);
+    border-color: rgb(172, 148, 11);
+    color: white;
+  }
+  
+  .ant-btn-dashed {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+  }
+  
+  .ant-btn-default {
+    background-color: rgb(11, 190, 11);
+    border: 1px solid #d9d9d9;
+    color: #000;
+  }
+  
+  .time-slot-container {
+    display:list-item;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .time-slot {
+    flex: 0 1 30%;
+  }
+  
+  .time-slot button {
+    width: 100%;
+  }
+
+   .confirm-button {
+    background-color: rgb(49, 49, 223);
+    border-color: rgb(49, 49, 223);
+    color: white;
+  }
+
+  .back-button{
+    background-color: transparent;
+  }
+
+  .waiter-modal {
+    max-width: 400px;
+  }
+  
+  .status-dropdown {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+  }
+  
+  .order-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .update-status-button,
+  .assign-order-button {
+    margin-top: 10px;
+    width: 100%;
+  }

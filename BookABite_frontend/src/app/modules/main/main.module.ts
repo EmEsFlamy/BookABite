@@ -9,10 +9,11 @@ import { LoginComponent } from './components/login/login.component';
 import { AboutComponent } from './components/about/about.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { SafeUrlPipe } from '../../safe-url.pipe';
+import { ReservationComponent } from './components/reservation/reservation.component';
 
 
 @NgModule({
-    declarations: [MainComponent, HomeComponent, MenuComponent, LoginComponent, AboutComponent, ContactComponent, SafeUrlPipe],
+    declarations: [MainComponent, HomeComponent, MenuComponent, LoginComponent, AboutComponent, ContactComponent, SafeUrlPipe, ReservationComponent],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],
