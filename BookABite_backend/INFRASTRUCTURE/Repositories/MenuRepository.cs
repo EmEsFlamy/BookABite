@@ -48,7 +48,8 @@ public class MenuRepository(BookABiteDbContext dbContext) : IMenuRepository
         {
             Id = m.Id,
             FoodName = m.FoodName,
-            Price = m.Price
+            Price = m.Price,
+            FoodType = (DOMAIN.Enums.FoodTypeEnum)m.FoodType
         }).ToList();
     }
 
