@@ -50,7 +50,8 @@ namespace INFRASTRUCTURE.Repositories
                 Name = r.Name,
                 Surname = r.Surname,
                 Email = r.Email,
-                Password = r.Password
+                Password = r.Password,
+                UserType = (DOMAIN.Enums.UserTypeEnum)r.UserType
             }).ToList();
         }
 
@@ -63,7 +64,8 @@ namespace INFRASTRUCTURE.Repositories
                 Name = r.Name,
                 Surname = r.Surname,
                 Email = r.Email,
-                Password = r.Password
+                Password = r.Password,
+                UserType = (DOMAIN.Enums.UserTypeEnum)r.UserType
             };
         }
 
@@ -76,7 +78,8 @@ namespace INFRASTRUCTURE.Repositories
                 Name = r.Name,
                 Surname = r.Surname,
                 Email = r.Email,
-                Password = r.Password
+                Password = r.Password,
+                UserType = (DOMAIN.Enums.UserTypeEnum)r.UserType
             };
         }
 
