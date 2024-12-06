@@ -24,6 +24,7 @@ public class TableController(ITableService tableService) : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetByIdAsync(int tableId)
     {
@@ -35,6 +36,7 @@ public class TableController(ITableService tableService) : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("all")]
     public async Task<IActionResult> GetAsync()
     {
@@ -46,6 +48,7 @@ public class TableController(ITableService tableService) : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpPut]
     public async Task<IActionResult> UpdateAsync(Table table)
     {

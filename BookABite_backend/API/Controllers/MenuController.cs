@@ -24,6 +24,7 @@ public class MenuController(IMenuService menuService) : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetByIdAsync(int menuId)
     {
@@ -35,6 +36,7 @@ public class MenuController(IMenuService menuService) : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("all")]
     public async Task<IActionResult> GetAsync()
     {
