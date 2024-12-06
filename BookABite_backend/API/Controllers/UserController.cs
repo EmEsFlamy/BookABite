@@ -57,7 +57,13 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
             return BadRequest("Password do not match!");
         }
         var token = _jwtTokenGenerator.GenerateToken(result.Id, result.Name + " " + result.Surname);
-        return Ok(token);
+
+        var response = new LoginResponse
+        {
+            Token = token,
+            UserType = result.UserType.ToString()
+        };
+        return Ok(response);
     }
 
     [HttpGet]
