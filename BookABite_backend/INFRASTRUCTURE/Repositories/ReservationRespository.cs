@@ -14,7 +14,7 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         var availableTable = await _dbContext.Tables
         .Where(t => !_dbContext.Reservations
             .Any(r => r.TableId == t.Id
-                      && r.ReservationTime == reservation.ReservationTime
+                      && r.ReservationStart == reservation.ReservationStart
                       && r.IsActive))
         .FirstOrDefaultAsync();
 
@@ -25,7 +25,8 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
 
         var r = new Entities.Reservation()
         {
-            ReservationTime = reservation.ReservationTime,
+            ReservationStart = reservation.ReservationStart,
+            ReservationEnd = reservation.ReservationEnd, 
             IsActive = reservation.IsActive,
             IsCompleted = reservation.IsCompleted,
             ClientName = reservation.ClientName,
@@ -60,7 +61,8 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         return reservations.Select(r => new Reservation
         {
             Id = r.Id,
-            ReservationTime = r.ReservationTime,
+            ReservationEnd = r.ReservationEnd,
+            ReservationStart = r.ReservationStart,
             IsActive = r.IsActive,
             IsCompleted = r.IsCompleted,
             ClientName = r.ClientName,
@@ -75,7 +77,8 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         return r is null ? null! : new Reservation
         {
             Id = r.Id,
-            ReservationTime = r.ReservationTime,
+            ReservationStart = r.ReservationStart,
+            ReservationEnd  = r.ReservationEnd,
             IsActive = r.IsActive,
             IsCompleted = r.IsCompleted,
             ClientName = r.ClientName,
@@ -93,7 +96,8 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             return null; 
         }
 
-        er.ReservationTime = reservation.ReservationTime;
+        er.ReservationStart = reservation.ReservationStart;
+        er.ReservationEnd = reservation.ReservationEnd;
         er.IsActive = reservation.IsActive;
         er.IsCompleted = reservation.IsCompleted;
         er.ClientName = reservation.ClientName;

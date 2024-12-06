@@ -17,7 +17,7 @@ namespace INFRASTRUCTURE.Repositories
             {
                 Name = user.Name,
                 Surname = user.Surname,
-                Email = user.Email,
+                Username = user.Username,
                 Password = user.Password,
                 UserType = (UserTypeEnum)user.UserType
             };
@@ -49,7 +49,7 @@ namespace INFRASTRUCTURE.Repositories
                 Id = r.Id,
                 Name = r.Name,
                 Surname = r.Surname,
-                Email = r.Email,
+                Username = r.Username,
                 Password = r.Password,
                 UserType = (DOMAIN.Enums.UserTypeEnum)r.UserType
             }).ToList();
@@ -63,7 +63,7 @@ namespace INFRASTRUCTURE.Repositories
                 Id = r.Id,
                 Name = r.Name,
                 Surname = r.Surname,
-                Email = r.Email,
+                Username = r.Username,
                 Password = r.Password,
                 UserType = (DOMAIN.Enums.UserTypeEnum)r.UserType
             };
@@ -71,13 +71,13 @@ namespace INFRASTRUCTURE.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            var r = await _dbContext.Users.AsNoTracking().SingleOrDefaultAsync(user => user.Email == email);
+            var r = await _dbContext.Users.AsNoTracking().SingleOrDefaultAsync(user => user.Username == email);
             return r is null ? null! : new User
             {
                 Id = r.Id,
                 Name = r.Name,
                 Surname = r.Surname,
-                Email = r.Email,
+                Username = r.Username,
                 Password = r.Password,
                 UserType = (DOMAIN.Enums.UserTypeEnum)r.UserType
             };
@@ -94,7 +94,7 @@ namespace INFRASTRUCTURE.Repositories
 
             er.Name = user.Name;
             er.Surname = user.Surname;
-            er.Email = user.Email;
+            er.Username = user.Username;
             er.Password = user.Password;
 
             await _dbContext.SaveChangesAsync();
