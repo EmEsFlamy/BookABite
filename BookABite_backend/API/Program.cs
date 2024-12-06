@@ -54,6 +54,8 @@ builder.Host.UseSerilog((ctx, conf) =>
     conf.ReadFrom.Configuration(ctx.Configuration);
 });
 
+
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(b =>

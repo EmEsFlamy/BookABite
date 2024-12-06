@@ -23,12 +23,12 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
         {
             Name = userRegistration.Name,
             Surname = userRegistration.Surname,
-            Email = userRegistration.Email,
+            Username = userRegistration.Username,
             Password = Encoding.UTF8.GetBytes(userRegistration.Password),
             UserType = userRegistration.UserType
         };
 
-        var existingUser = await _userService.GetByEmailAsync(userRegistration.Email);
+        var existingUser = await _userService.GetByEmailAsync(userRegistration.Username);
 
         if (existingUser is not null) 
         {
@@ -47,7 +47,7 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
     public async Task<IActionResult> LoginAsync(UserLogin userLogin)
     {
 
-        var result = await _userService.GetByEmailAsync(userLogin.Email);
+        var result = await _userService.GetByEmailAsync(userLogin.Username);
         if (result is null)
         {
             return NotFound("User not found!");

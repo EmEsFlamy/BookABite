@@ -34,26 +34,13 @@ namespace INFRASTRUCTURE.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FullPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    Time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TimeStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TimeEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     OrderStatus = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrdersHistories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FullPrice = table.Column<decimal>(type: "numeric", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrdersHistories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,7 +65,7 @@ namespace INFRASTRUCTURE.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Surname = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<byte[]>(type: "bytea", nullable: false),
                     UserType = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -93,7 +80,8 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ReservationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ReservationStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ReservationEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
                     ClientName = table.Column<string>(type: "text", nullable: false),
@@ -185,9 +173,6 @@ namespace INFRASTRUCTURE.Migrations
         {
             migrationBuilder.DropTable(
                 name: "MenuOrders");
-
-            migrationBuilder.DropTable(
-                name: "OrdersHistories");
 
             migrationBuilder.DropTable(
                 name: "Reservations");

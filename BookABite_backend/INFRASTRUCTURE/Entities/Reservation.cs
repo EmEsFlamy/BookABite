@@ -5,7 +5,8 @@ namespace INFRASTRUCTURE.Entities
     {  
         public int Id { get; set; }
 
-        public DateTime ReservationTime { get; set; }
+        public DateTime ReservationStart { get; set; }
+        public DateTime ReservationEnd { get; set; }
 
         public bool IsActive { get; set; }
 

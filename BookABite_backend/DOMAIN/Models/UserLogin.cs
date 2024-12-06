@@ -1,5 +1,5 @@
 ﻿
 namespace DOMAIN.Models;
 
-public record UserLogin(string Email, string Password);
+public record UserLogin(string Username, string Password);
 

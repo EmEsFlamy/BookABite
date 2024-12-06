@@ -2,9 +2,11 @@
 
 public enum FoodTypeEnum
 {
-    Drink,
-    Soup,
+    Starters,
+    Drinks,
+    Soups,
     Main,
-    Appetizer,
-    Dessert
+    Kids,
+    Salads,
+    Alcohol
 }

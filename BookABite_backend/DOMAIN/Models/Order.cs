@@ -14,8 +14,8 @@ namespace DOMAIN.Models
 
         public decimal FullPrice { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Time { get; set; }
+        public DateTime TimeStart { get; set; }
+        public DateTime TimeEnd { get; set; }
 
         public OrderStatusEnum OrderStatus { get; set; }
     }

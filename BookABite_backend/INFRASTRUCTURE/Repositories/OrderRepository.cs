@@ -14,6 +14,8 @@ namespace INFRASTRUCTURE.Repositories
             var r = new Entities.Order()
             {
                 FullPrice = order.FullPrice,
+                TimeStart = order.TimeStart,
+                TimeEnd = order.TimeEnd,
                 OrderStatus = OrderStatusEnum.Ordered
             };
             await _dbContext.Orders.AddAsync(r);
@@ -41,7 +43,9 @@ namespace INFRASTRUCTURE.Repositories
             return r is null ? null! : new Order
             {
                 Id = r.Id,
-                FullPrice = r.FullPrice
+                FullPrice = r.FullPrice,
+                TimeStart = r.TimeStart,
+                TimeEnd = r.TimeEnd
             };
         }
 
@@ -53,6 +57,8 @@ namespace INFRASTRUCTURE.Repositories
             {
                 Id = o.Id,
                 FullPrice = o.FullPrice,
+                TimeStart = o.TimeStart,
+                TimeEnd = o.TimeEnd
             }).ToList();
         }
 

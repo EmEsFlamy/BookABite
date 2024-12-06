@@ -94,32 +94,15 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("OrderStatus")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("Time")
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime>("TimeEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("TimeStart")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("INFRASTRUCTURE.Entities.OrderHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("FullPrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OrdersHistories");
                 });
 
             modelBuilder.Entity("INFRASTRUCTURE.Entities.Reservation", b =>
@@ -148,7 +131,10 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("ReservationTime")
+                    b.Property<DateTime>("ReservationEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ReservationStart")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TableId")
@@ -188,10 +174,6 @@ namespace INFRASTRUCTURE.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -206,6 +188,10 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.Property<int>("UserType")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
