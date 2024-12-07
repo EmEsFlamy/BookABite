@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthResponse } from './auth-response.model';
 
 interface LoginResponse {
   token: string;
@@ -16,10 +15,6 @@ export class AuthService {
   login( credentials: { username: string, password: string } ) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<LoginResponse>(`${this.apiUrl}/User/login`, credentials);
-  }
-
-  logout() {
-    return this.http.post(`${this.apiUrl}/User/logout`, {});
   }
 
    getDashboardData() {

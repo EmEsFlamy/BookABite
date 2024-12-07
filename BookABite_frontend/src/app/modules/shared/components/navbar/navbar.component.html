@@ -1,5 +1,6 @@
 <nav class="navbar" [ngClass]="{'scrolled': isScrolled}">
-    <div class="navbar-container">
+  <!-- Guest-->
+    <div class="navbar-container" *ngIf="userRole ==='Guest'">
       <a class="navbar-brand" routerLink="/">BookABite</a>
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -16,4 +17,24 @@
         </li>
       </ul>
     </div>
+
+  <!-- Waiter-->
+    <div class="navbar-container" *ngIf="userRole ==='Waiter'">
+      <h2>Welcome, {{username}}</h2>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#" (click)="logout()">Logout</a>
+        </li>
+      </ul>
+    </div>
+
+  <!-- Admin-->
+  <div class="navbar-container" *ngIf="userRole ==='Admin'">
+    <h2>Welcome, {{username}}</h2>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="logout()">Logout</a>
+      </li>
+    </ul>
+  </div>
   </nav>

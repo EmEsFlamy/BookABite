@@ -7,7 +7,23 @@ import { Component, HostListener } from '@angular/core';
 })
 export class NavbarComponent {
   isScrolled = false;
+  userRole: string = '';
+  username = sessionStorage.getItem('username');
 
+  ngOnInit() {
+    const userType = sessionStorage.getItem('userType');
+    if(userType){
+      this.userRole = userType
+    }else{
+      this.userRole = 'Guest';
+    }
+  }
+
+  logout() {
+    sessionStorage.clear();
+    window.location
+  }
+  
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;

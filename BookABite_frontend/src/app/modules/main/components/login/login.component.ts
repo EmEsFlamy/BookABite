@@ -31,13 +31,14 @@ export class LoginComponent {
       (response: LoginResponse) => {
         console.log('Login successful', response);
 
-        sessionStorage.setItem('isLoggedIn', 'true');
         sessionStorage.setItem('username', this.username);
         sessionStorage.setItem('userType', response.userType);
         sessionStorage.setItem('token', response.token);
         
         this.modalRef.close();
-        this.router.navigate(['/reservation']);
+        this.router.navigate(['/reservation']).then(() => {
+          window.location.reload();
+        });
       },
       (error) => {
         console.error('Login failed', error);
