@@ -1,9 +1,9 @@
 <div class="reservation-wrapper">
-  <h2 *ngIf="userRole === 'guest'">Table Reservation</h2>
-  <h2 *ngIf="userRole === 'waiter'">Waiter Management System</h2>
+  <h2 *ngIf="userRole === 'Guest'">Table Reservation</h2>
+  <h2 *ngIf="userRole === 'Waiter'">Waiter Management System</h2>
 
   <!--GUEST-->
-  <ng-container *ngIf="userRole === 'guest'">
+  <ng-container *ngIf="userRole === 'Guest'">
     <div class="reservation-container">
       <div *ngFor="let table of tables" class="table-box">
         <button nz-button [nzType]="getStatusType(table.status)" [nzDanger]="table.status === 'Occupied'"
@@ -45,7 +45,7 @@
   </ng-container>
 
   <!--WAITER-->
-  <ng-container *ngIf="userRole === 'waiter'">
+  <ng-container *ngIf="userRole === 'Waiter'">
     <div class="reservation-container">
       <div *ngFor="let table of tables" class="table-box">
         <button

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NzIconService } from 'ng-zorro-antd/icon';
+import { MenuService } from '../../../../../services/menu.service';
+import { HttpClient } from '@angular/common/http';
 
 interface Category {
   name: string;
@@ -9,6 +11,7 @@ interface Category {
 interface MenuItem {
   name: string;
   price: string;
+  category: number;
 }
 
 @Component({
@@ -28,7 +31,17 @@ export class MenuComponent implements OnInit {
     { name: 'Alcohol', icon: 'custom-alcohol:antd' },
   ];
 
-  menuItems = {
+  menuItems: { [key: string]: MenuItem[] } = {
+    starters: [],
+    drinks: [],
+    soups: [],
+    main: [],
+    kids: [],
+    salads: [],
+    alcohol: [],
+  };
+
+ /* menuItems = {
     starters: [
       { name: 'Mozzarella Sticks', price: '$6.99' },
       { name: 'Garlic Bread', price: '$4.99' },
@@ -102,16 +115,15 @@ export class MenuComponent implements OnInit {
       { name: 'Tequila Sunrise', price: '$7.25' },
     ],
   }
-
+*/
 
   selectedCategory: Category = this.categories[0];
-  selectedItems: MenuItem[] = this.menuItems.starters;
   allItems: MenuItem[] = [];
   leftItems: MenuItem[] = [];
   rightItems: MenuItem[] = [];
   fadeIn = true;
 
-  constructor(private iconService: NzIconService) {
+  constructor(private iconService: NzIconService, private menuService: MenuService, private http: HttpClient) {
     this.iconService.addIconLiteral(
       'custom-main:antd',
       `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 121.87" style="enable-background:new 0 0 122.88 121.87" xml:space="preserve">
@@ -148,8 +160,47 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.allItems = this.menuItems.starters;
-    this.splitItems();
+    this.fetchMenuItems();
+  }
+
+  fetchMenuItems() {
+    this.http.get<MenuItem[]>('http://localhost:8080/api/Menu/all').subscribe(
+      (data) => {
+        data.forEach((item) => {
+          switch (item.category) {
+            case 0:
+              this.menuItems['starters'].push(item);
+              break;
+            case 1:
+              this.menuItems['drinks'].push(item);
+              break;
+            case 2:
+              this.menuItems['soups'].push(item);
+              break;
+            case 3:
+              this.menuItems['main'].push(item);
+              break;
+            case 4:
+              this.menuItems['kids'].push(item);
+              break;
+            case 5:
+              this.menuItems['salads'].push(item);
+              break;
+            case 6:
+              this.menuItems['alcohol'].push(item);
+              break;
+            default:
+              this.menuItems['starters'].push(item);
+              break;
+          }
+        });
+
+        this.onCategoryChange(this.categories[0]);
+      },
+      (error) => {
+        console.error('Failed to fetch menu items:', error);
+      }
+    );
   }
 
   splitItems() {
@@ -163,37 +214,30 @@ export class MenuComponent implements OnInit {
     this.selectedCategory = category;
     switch (category.name) {
       case 'Starter':
-        this.allItems = this.menuItems.starters;
-        this.splitItems();
+        this.allItems = this.menuItems['starters'];
         break;
       case 'Drinks':
-        this.allItems = this.menuItems.drinks;
-        this.splitItems();
+        this.allItems = this.menuItems['drinks'];
         break;
       case 'Soups':
-        this.allItems = this.menuItems.soups;
-        this.splitItems();
+        this.allItems = this.menuItems['soups'];
         break;
       case 'Main':
-        this.allItems = this.menuItems.main;
-        this.splitItems();
+        this.allItems = this.menuItems['main'];
         break;
       case 'Kids':
-        this.allItems = this.menuItems.kids;
-        this.splitItems();
+        this.allItems = this.menuItems['kids'];
         break;
       case 'Salads':
-        this.allItems = this.menuItems.salads;
-        this.splitItems();
+        this.allItems = this.menuItems['salads'];
         break;
       case 'Alcohol':
-        this.allItems = this.menuItems.alcohol;
-        this.splitItems();
+        this.allItems = this.menuItems['alcohol'];
         break;
       default:
-        this.allItems = this.menuItems.starters;
-        this.splitItems();
+        this.allItems = this.menuItems['starters'];
     }
+    this.splitItems();
   }
 
 }

@@ -68,17 +68,24 @@ export class ReservationComponent {
   selectedSlots: number[] = [];
   newStatus: string = '';
   newOrder: string = '';
+  userRole: string = '';
   selectedStatus: string = '';
   tableStatuses: string[] = ['Available', 'Occupied', 'Cleaning'];
 
-  userRole: 'guest' | 'waiter' = 'guest';
+ 
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    //const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    const isLoggedIn = 'true';
-    this.userRole = isLoggedIn === 'true' ? 'waiter' : 'guest';
+    const userType = sessionStorage.getItem('userType');
+    const token = sessionStorage.getItem('token');
+    //const isLoggedIn = 'true';
+    if(userType){
+      this.userRole = userType
+    }else{
+      this.userRole = 'Guest';
+    }
+    
     console.log('User role:', this.userRole);
   }
 
@@ -86,7 +93,7 @@ export class ReservationComponent {
     this.selectedTable = table;
     this.isModalVisible = true;
 
-    if (this.userRole === 'guest') {
+    if (this.userRole === 'Guest') {
       this.currentStep = 1;
       this.selectedSlots = [];
     }

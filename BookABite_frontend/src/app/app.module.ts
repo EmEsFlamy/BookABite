@@ -8,6 +8,7 @@ import {AppComponent} from './app.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { MainModule } from './modules/main/main.module';
 import { IconService } from './modules/shared/IconService';
+import { HttpClientModule } from '@angular/common/http';
 
 registerLocaleData(pl);
 
@@ -17,6 +18,7 @@ registerLocaleData(pl);
     imports: [
         // vendor modules
         BrowserModule,
+        HttpClientModule,
         BrowserAnimationsModule,
         // project modules
         AppRoutingModule,
