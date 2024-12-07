@@ -18,8 +18,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of leftItems">
-            <td>{{ item.name }}</td>
-            <td>{{ item.price }}</td>
+            <td>{{ item.foodName }}</td>
+            <td>${{ item.price }}</td>
           </tr>
         </tbody>
       </nz-table>
@@ -35,8 +35,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of rightItems">
-            <td>{{ item.name }}</td>
-            <td>{{ item.price }}</td>
+            <td>{{ item.foodName }}</td>
+            <td>${{ item.price }}</td>
           </tr>
         </tbody>
       </nz-table>

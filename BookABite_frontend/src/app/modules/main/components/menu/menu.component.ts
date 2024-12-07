@@ -9,7 +9,7 @@ interface Category {
 }
 
 interface MenuItem {
-  name: string;
+  foodName: string;
   price: string;
   category: number;
 }
