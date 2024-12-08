@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NzIconService } from 'ng-zorro-antd/icon';
-import { MenuService } from '../../../../../services/menu.service';
+import { MenuItem, MenuService } from '../../../../../services/menu.service';
 import { HttpClient } from '@angular/common/http';
 
 interface Category {
   name: string;
   icon: string;
-}
-
-interface MenuItem {
-  foodName: string;
-  price: string;
-  category: number;
 }
 
 @Component({
@@ -21,6 +15,16 @@ interface MenuItem {
 })
 export class MenuComponent implements OnInit {
 
+  foodTypeMap: { [key: number]: string } = {
+    0: 'starters',
+    1: 'drinks',
+    2: 'soups',
+    3: 'main',
+    4: 'kids',
+    5: 'salads',
+    6: 'alcohol',
+  };
+  
   categories: Category[] = [
     { name: 'Starters', icon: 'custom-starters:antd' },
     { name: 'Soups', icon: 'custom-soups:antd' },
@@ -164,38 +168,18 @@ export class MenuComponent implements OnInit {
   }
 
   fetchMenuItems() {
-    this.http.get<MenuItem[]>('http://localhost:8080/api/Menu/all').subscribe(
+    this.menuService.getMenu().subscribe(
       (data) => {
         data.forEach((item) => {
-          switch (item.category) {
-            case 0:
-              this.menuItems['starters'].push(item);
-              break;
-            case 1:
-              this.menuItems['drinks'].push(item);
-              break;
-            case 2:
-              this.menuItems['soups'].push(item);
-              break;
-            case 3:
-              this.menuItems['main'].push(item);
-              break;
-            case 4:
-              this.menuItems['kids'].push(item);
-              break;
-            case 5:
-              this.menuItems['salads'].push(item);
-              break;
-            case 6:
-              this.menuItems['alcohol'].push(item);
-              break;
-            default:
-              this.menuItems['starters'].push(item);
-              break;
-          }
-        });
-
+              const key = this.foodTypeMap[item.foodType];
+              if (key) {
+                this.menuItems[key].push(item);
+              } else {
+                console.warn(`Unknown foodType: ${item.foodType}`);
+              }
+          });
         this.onCategoryChange(this.categories[0]);
+        console.log(this.menuItems);
       },
       (error) => {
         console.error('Failed to fetch menu items:', error);
@@ -210,33 +194,10 @@ export class MenuComponent implements OnInit {
   }
 
 
-  onCategoryChange(category: { name: string; icon: string }): void {
+  onCategoryChange(category: Category): void {
+    const key = category.name.toLowerCase();
     this.selectedCategory = category;
-    switch (category.name) {
-      case 'Starter':
-        this.allItems = this.menuItems['starters'];
-        break;
-      case 'Drinks':
-        this.allItems = this.menuItems['drinks'];
-        break;
-      case 'Soups':
-        this.allItems = this.menuItems['soups'];
-        break;
-      case 'Main':
-        this.allItems = this.menuItems['main'];
-        break;
-      case 'Kids':
-        this.allItems = this.menuItems['kids'];
-        break;
-      case 'Salads':
-        this.allItems = this.menuItems['salads'];
-        break;
-      case 'Alcohol':
-        this.allItems = this.menuItems['alcohol'];
-        break;
-      default:
-        this.allItems = this.menuItems['starters'];
-    }
+    this.allItems = this.menuItems[key] || [];
     this.splitItems();
   }
 
