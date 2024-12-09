@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(BookABiteDbContext))]
-    [Migration("20241206220450_FirstMigration")]
+    [Migration("20241209193118_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -182,6 +182,10 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("text");
 
                     b.Property<byte[]>("Password")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("bytea");
 

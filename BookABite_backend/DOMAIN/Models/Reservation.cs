@@ -22,5 +22,7 @@ namespace DOMAIN.Models
         public string ClientSurname { get; set; }
 
         public string ClientPhoneNumber { get; set; }
+
+        public int TableId { get; set; } = -1;
     }
 }

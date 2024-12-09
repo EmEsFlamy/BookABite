@@ -67,6 +67,7 @@ namespace INFRASTRUCTURE.Migrations
                     Surname = table.Column<string>(type: "text", nullable: false),
                     Username = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<byte[]>(type: "bytea", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: false),
                     UserType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

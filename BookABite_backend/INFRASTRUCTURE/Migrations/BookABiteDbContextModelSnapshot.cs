@@ -182,6 +182,10 @@ namespace INFRASTRUCTURE.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("text");

@@ -8,8 +8,9 @@ namespace DOMAIN.Enums
 {
     public enum TableStatusEnum
     {
-        Free,
-        Ocupited,
-        Reserved
+        Available,
+        Reserved,
+        Occupied,
+        Cleaning
     }
 }
