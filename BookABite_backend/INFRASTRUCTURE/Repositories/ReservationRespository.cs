@@ -1,6 +1,7 @@
 ﻿using DOMAIN.Models;
 using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
+using infa = INFRASTRUCTURE.Entities;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -9,19 +10,23 @@ namespace INFRASTRUCTURE.Repositories;
 public class ReservationRespository(BookABiteDbContext dbContext) : IReservationRepository
 {
     private readonly BookABiteDbContext _dbContext = dbContext;
-    public async Task<Reservation> CreateAsync(Reservation reservation)
+
+    private async Task<infa.Table> GetFirstAvaiableTable(DateTime startDate)
     {
         var availableTable = await _dbContext.Tables
         .Where(t => !_dbContext.Reservations
             .Any(r => r.TableId == t.Id
-                      && r.ReservationStart == reservation.ReservationStart
+                      && r.ReservationStart == startDate
                       && r.IsActive))
         .FirstOrDefaultAsync();
 
-        if (availableTable == null)
-        {
-            throw new InvalidOperationException("No available tables at the requested time.");
-        }
+        return availableTable;
+    }
+
+    public async Task<Reservation> CreateAsync(Reservation reservation)
+    {
+        reservation.ReservationStart = reservation.ReservationStart.AddSeconds(-reservation.ReservationStart.Second);
+        reservation.ReservationEnd = reservation.ReservationEnd.AddSeconds(-reservation.ReservationEnd.Second);
 
         var r = new Entities.Reservation()
         {
@@ -32,7 +37,7 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             ClientName = reservation.ClientName,
             ClientSurname = reservation.ClientSurname,
             ClientPhoneNumber = reservation.ClientPhoneNumber,
-            TableId = availableTable.Id 
+            TableId = reservation.TableId != -1 ? reservation.TableId : (await GetFirstAvaiableTable(reservation.ReservationStart)).Id
         };
 
         await _dbContext.Reservations.AddAsync(r);
@@ -107,5 +112,7 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         await _dbContext.SaveChangesAsync();
         return reservation;
     }
+
+     
 }
 
