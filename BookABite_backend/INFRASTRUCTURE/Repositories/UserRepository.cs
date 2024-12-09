@@ -19,6 +19,7 @@ namespace INFRASTRUCTURE.Repositories
                 Surname = user.Surname,
                 Username = user.Username,
                 Password = user.Password,
+                PasswordSalt = user.PasswordSalt,
                 UserType = (UserTypeEnum)user.UserType
             };
             await _dbContext.Users.AddAsync(r);
@@ -79,6 +80,7 @@ namespace INFRASTRUCTURE.Repositories
                 Surname = r.Surname,
                 Username = r.Username,
                 Password = r.Password,
+                PasswordSalt = r.PasswordSalt,
                 UserType = (DOMAIN.Enums.UserTypeEnum)r.UserType
             };
         }

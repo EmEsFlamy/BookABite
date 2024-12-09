@@ -11,18 +11,6 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<User> CreateAsync(User user)
     {
-        if (user.Password != null && user.Password.Length > 0)
-        {
-            (byte[] hash, byte[] salt) = PasswordHasher.HashPassword(user.Password);
-
-            user.Password = hash;
-            user.PasswordSalt = salt;
-        }
-        else
-        {
-            throw new ArgumentException("Password cannot be null or empty.");
-        }
-
         var result = await _userRepository.CreateAsync(user);
         return result;
     }

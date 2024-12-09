@@ -2,7 +2,7 @@
 
 namespace APPLICATION.Security;
 
-public class PasswordHasher
+public static class PasswordHasher
 {
     public static (byte[] Hash, byte[] Salt) HashPassword(byte[] passwordBytes)
     {

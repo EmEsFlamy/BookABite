@@ -1,4 +1,5 @@
-﻿using APPLICATION.Services;
+﻿using APPLICATION.Security;
+using APPLICATION.Services;
 using DOMAIN.Models;
 using DOMAIN.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -15,16 +16,18 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
     private readonly IUserService _userService = userService;
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
 
-
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(UserRegistration userRegistration)
     {
+        var pass = PasswordHasher.HashPassword(Encoding.UTF8.GetBytes(userRegistration.Password));
         var user = new User
         {
             Name = userRegistration.Name,
             Surname = userRegistration.Surname,
             Username = userRegistration.Username,
-            Password = Encoding.UTF8.GetBytes(userRegistration.Password),
+            Password = pass.Hash,
+            PasswordSalt = pass.Salt,
             UserType = userRegistration.UserType
         };
 
@@ -52,7 +55,7 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
         {
             return NotFound("User not found!");
         }
-        if (!result.Password.SequenceEqual(Encoding.UTF8.GetBytes(userLogin.Password)))
+        if (!PasswordHasher.VerifyPassword(Encoding.UTF8.GetBytes(userLogin.Password),result.Password,result.PasswordSalt))
         {
             return BadRequest("Password do not match!");
         }
