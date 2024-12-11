@@ -1,4 +1,5 @@
-﻿using DOMAIN.Models;
+﻿using DOMAIN.Enums;
+using DOMAIN.Models;
 using DOMAIN.Repositories;
 using DOMAIN.Services;
 using INFRASTRUCTURE.Database;
@@ -13,7 +14,8 @@ namespace INFRASTRUCTURE.Repositories
         {
             var t = new Entities.Table()
             {
-                Seats = table.Seats
+                Seats = table.Seats,
+                TableStatus = (Enums.TableStatusEnum)table.TableStatus
             };
             await _dbContext.Tables.AddAsync(t);
             await _dbContext.SaveChangesAsync();
