@@ -1,4 +1,5 @@
-﻿using DOMAIN.Models;
+﻿using DOMAIN.DTOs;
+using DOMAIN.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace DOMAIN.Repositories
 {
     public interface ITableRepository
     {
-        Task<Table> GetByIdAsync(int tableId);
+        Task<TableDto> GetByIdAsync(int tableId);
         Task<Table> CreateAsync(Table table);
         Task<Table> UpdateAsync(Table table);
         Task<bool> DeleteAsync(int tableId);
-        Task<List<Table>> GetAsync();
+        Task<List<TableDto>> GetAsync();
     }
 }

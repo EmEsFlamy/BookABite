@@ -15,9 +15,9 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
     {
         var availableTable = await _dbContext.Tables
         .Where(t => !_dbContext.Reservations
-            .Any(r => r.TableId == t.Id
-                      && r.ReservationStart == startDate
-                      && r.IsActive))
+    .Any(r => r.TableId == t.Id
+              && r.IsActive
+              && (startDate < r.ReservationEnd && startDate >= r.ReservationStart)))
         .FirstOrDefaultAsync();
 
         return availableTable;
@@ -40,9 +40,18 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             TableId = reservation.TableId != -1 ? reservation.TableId : (await GetFirstAvaiableTable(reservation.ReservationStart)).Id
         };
 
-        await _dbContext.Reservations.AddAsync(r);
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.Reservations.AddAsync(r);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}, StackTrace: {ex.StackTrace}");
+            throw;
+        }
         reservation.Id = r.Id;
+        reservation.TableId = r.TableId;
         return reservation;
     }
 
@@ -72,7 +81,8 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             IsCompleted = r.IsCompleted,
             ClientName = r.ClientName,
             ClientSurname = r.ClientSurname,
-            ClientPhoneNumber = r.ClientPhoneNumber
+            ClientPhoneNumber = r.ClientPhoneNumber,
+            TableId = r.TableId
         }).ToList();
     }
 
@@ -88,7 +98,8 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             IsCompleted = r.IsCompleted,
             ClientName = r.ClientName,
             ClientSurname = r.ClientSurname,
-            ClientPhoneNumber = r.ClientPhoneNumber
+            ClientPhoneNumber = r.ClientPhoneNumber,
+            TableId = r.TableId
         };
     }
 

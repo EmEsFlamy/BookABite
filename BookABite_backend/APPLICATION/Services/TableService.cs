@@ -1,4 +1,5 @@
-﻿using DOMAIN.Models;
+﻿using DOMAIN.DTOs;
+using DOMAIN.Models;
 using DOMAIN.Repositories;
 using DOMAIN.Services;
 using Microsoft.Extensions.Logging;
@@ -43,7 +44,7 @@ namespace APPLICATION.Services
             return result;
         }
 
-        public async Task<List<Table>> GetAsync()
+        public async Task<List<TableDto>> GetAsync()
         {
             _logger.LogInformation("Getting all tables");
             var result = await _tableRepository.GetAsync();
@@ -58,7 +59,7 @@ namespace APPLICATION.Services
             return result;
         }
 
-        public async Task<Table> GetByIdAsync(int tableId)
+        public async Task<TableDto> GetByIdAsync(int tableId)
         {
             _logger.LogInformation("Getting table");
             var result = await _tableRepository.GetByIdAsync(tableId);

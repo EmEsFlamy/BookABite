@@ -1,4 +1,5 @@
-﻿using DOMAIN.Enums;
+﻿using DOMAIN.DTOs;
+using DOMAIN.Enums;
 using DOMAIN.Models;
 using DOMAIN.Repositories;
 using DOMAIN.Services;
@@ -36,23 +37,25 @@ namespace INFRASTRUCTURE.Repositories
             return true;
         }
 
-        public async Task<List<Table>> GetAsync()
+        public async Task<List<TableDto>> GetAsync()
         {
             var tables = await _dbContext.Tables.AsNoTracking().ToListAsync();
-            return tables.Select(t => new Table
+            return tables.Select(t => new TableDto
             {
                 Id = t.Id,
-                Seats = t.Seats
+                Seats = t.Seats,
+                TableStatus = Enum.GetName((TableStatusEnum)t.TableStatus)
             }).ToList();
         }
 
-        public async Task<Table> GetByIdAsync(int tableId)
+        public async Task<TableDto> GetByIdAsync(int tableId)
         {
             var t = await _dbContext.Tables.AsNoTracking().SingleOrDefaultAsync(table => table.Id == tableId);
-            return t is null ? null! : new Table
+            return t is null ? null! : new TableDto
             {
                 Id = t.Id,
-                Seats = t.Seats
+                Seats = t.Seats,
+                TableStatus = Enum.GetName((TableStatusEnum)t.TableStatus)
             };
         }
 
