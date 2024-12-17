@@ -44,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddHostedService<SetTableStatusJob>();
-// set table status available
+builder.Services.AddHostedService<ResetTableStatusJob>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddCustomServices();
