@@ -38,7 +38,11 @@ namespace INFRASTRUCTURE.Repositories
 
         public async Task<List<Table>> GetAsync()
         {
-            var tables = await _dbContext.Tables.AsNoTracking().ToListAsync();
+            var tables = await _dbContext.Tables
+                                 .AsNoTracking()
+                                 .OrderBy(t => t.Id)
+                                 .ToListAsync();
+
             return tables.Select(t => new Table
             {
                 Id = t.Id,
@@ -68,6 +72,7 @@ namespace INFRASTRUCTURE.Repositories
             }
 
             t.Seats = table.Seats;
+            t.TableStatus = (Enums.TableStatusEnum)table.TableStatus;
 
             await _dbContext.SaveChangesAsync();
             return table;
