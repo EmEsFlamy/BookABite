@@ -27,21 +27,7 @@ public class BookABiteDbContext : DbContext
                 v => (TableStatusEnum)Enum.Parse(typeof(TableStatusEnum), v) 
             );
 
-        //var polandTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-
-        //modelBuilder.Entity<Reservation>()
-        //    .Property(r => r.ReservationStart)
-        //    .HasConversion(
-        //        v => TimeZoneInfo.ConvertTimeToUtc(v, polandTimeZone),
-        //        v => TimeZoneInfo.ConvertTimeFromUtc(v, polandTimeZone) 
-        //    );
-
-        //modelBuilder.Entity<Reservation>()
-        //    .Property(r => r.ReservationEnd)
-        //    .HasConversion(
-        //        v => TimeZoneInfo.ConvertTimeToUtc(v, polandTimeZone),
-        //        v => TimeZoneInfo.ConvertTimeFromUtc(v, polandTimeZone)
-        //    );
+        
     }
 
 }

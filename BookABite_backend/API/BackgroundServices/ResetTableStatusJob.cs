@@ -59,7 +59,7 @@ public class ResetTableStatusJob(ILogger<ResetTableStatusJob> logger, IServiceSc
                 _logger.LogError("Status reseting failed. Exception message: {@error}", ex.Message);
             }
 
-            await Task.Delay(1000 * 60);
+            await Task.Delay(1000 * 10);
         }
     }
 }

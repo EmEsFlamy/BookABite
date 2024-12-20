@@ -1,5 +1,4 @@
-﻿using DOMAIN.DTOs;
-using DOMAIN.Models;
+﻿using DOMAIN.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +9,10 @@ namespace DOMAIN.Services
 {
     public interface ITableService
     {
-        Task<TableDto> GetByIdAsync(int tableId);
+        Task<Table> GetByIdAsync(int tableId);
         Task<Table> CreateAsync(Table table);
         Task<Table> UpdateAsync(Table table);
         Task<bool> DeleteAsync(int tableId);
-        Task<List<TableDto>> GetAsync();
+        Task<List<Table>> GetAsync();
     }
 }

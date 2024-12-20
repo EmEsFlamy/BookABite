@@ -51,7 +51,7 @@ public class SetTableStatusJob(ILogger<SetTableStatusJob> logger, IServiceScopeF
                 _logger.LogError("Status changing failed. Exception message: {@error}", ex.Message);
             }
 
-            await Task.Delay(1000 * 60);
+            await Task.Delay(1000 * 10);
         }
     }
 }
