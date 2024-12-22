@@ -1,117 +1,247 @@
 <div class="reservation-wrapper">
-  <h2 *ngIf="userRole === 'Guest'">Table Reservation</h2>
-  <h2 *ngIf="userRole === 'Waiter'">Waiter Management System</h2>
+  <h2>{{ userRole === 'Guest' ? 'Table Reservation' : 'Waiter Management System' }}</h2>
 
-  <!--GUEST-->
+  <!-- Guest View -->
   <ng-container *ngIf="userRole === 'Guest'">
     <div class="reservation-container">
       <div *ngFor="let table of tables" class="table-box">
-        <button nz-button [nzType]="getStatusType(table.status)" [nzDanger]="table.status === 'Occupied'"
-          [disabled]="table.status === 'Cleaning'" class="table-button" (click)="onTableClick(table)">
-          {{ table.number }}
+        <button
+          nz-button
+          [nzType]="getStatusType(table.tableStatus)"
+          [nzDanger]="table.tableStatus === 2"
+          [disabled]="table.tableStatus === 3"
+          class="table-button"
+          (click)="onTableClick(table)"
+        >
+          {{ table.id }}
         </button>
       </div>
     </div>
-    <nz-modal [(nzVisible)]="isModalVisible" nzTitle="Table Reservation" (nzOnCancel)="handleCancel()" [nzFooter]="null"
-      class="waiter-modal">
+
+    <!-- Guest Modal -->
+    <nz-modal
+      [(nzVisible)]="isModalVisible"
+      nzTitle="Table Reservation"
+      (nzOnCancel)="handleCancel()"
+      [nzFooter]="null"
+      class="guest-modal"
+    >
       <ng-container *nzModalContent>
+        <!-- Step 1: Table Details -->
         <ng-container *ngIf="currentStep === 1">
-          <p><strong>Table Number:</strong> {{ selectedTable?.number }}</p>
-          <p><strong>Status:</strong> {{ selectedTable?.status }}</p>
+          <p><strong>Table Number:</strong> {{ selectedTable?.id }}</p>
+          <p><strong>Status:</strong> {{ getStatusLabel() }}</p>
           <p><strong>Seats:</strong> {{ selectedTable?.seats }}</p>
-          <button nz-button nzType="primary" (click)="goToStep(2)" class="confirm-button">Reserve</button>
+          <button
+            nz-button
+            nzType="primary"
+            (click)="goToStep(2)"
+            class="confirm-button"
+          >
+            Reserve
+          </button>
         </ng-container>
 
+        <!-- Step 2: Time Slot Selection -->
         <ng-container *ngIf="currentStep === 2">
           <div class="time-slot-selection">
             <h3>Select Time Slots</h3>
             <div class="time-slot-container">
               <div *ngFor="let slot of timeSlots; let i = index" class="time-slot">
-                <button nz-button [nzType]="selectedSlots.includes(i) ? 'primary' : 'default'"
-                  (click)="onTimeSlotClick(i)">
+                <button
+                  nz-button
+                  [nzType]="selectedSlots.includes(i) ? 'primary' : 'default'"
+                  (click)="onTimeSlotClick(i)"
+                >
                   {{ slot }}
                 </button>
               </div>
             </div>
-            <button nz-button nzType="default" (click)="goToStep(1)" class="back-button">Back</button>
-            <button nz-button nzType="primary" [disabled]="!selectedSlots.length" (click)="confirmReservation()"
-              class="confirm-button">
-              Confirm Reservation
-            </button>
+        
+            <!-- Client Details Inputs -->
+            <div class="client-details">
+              <div>
+                <label for="clientName">Client Name:</label>
+                <input
+                  id="clientName"
+                  type="text"
+                  [(ngModel)]="clientName"
+                  placeholder="Enter client name"
+                />
+              </div>
+              <div>
+                <label for="clientSurname">Client Surname:</label>
+                <input
+                  id="clientSurname"
+                  type="text"
+                  [(ngModel)]="clientSurname"
+                  placeholder="Enter client surname"
+                />
+              </div>
+              <div>
+                <label for="clientPhoneNumber">Client Phone Number:</label>
+                <input
+                  id="clientPhoneNumber"
+                  type="text"
+                  [(ngModel)]="clientPhoneNumber"
+                  placeholder="Enter client phone number"
+                />
+              </div>
+            </div>
+        
+            <div class="modal-footer">
+              <button
+                nz-button
+                nzType="default"
+                (click)="goToStep(1)"
+                class="back-button"
+              >
+                Back
+              </button>
+              <button
+                nz-button
+                nzType="primary"
+                [disabled]="!selectedSlots.length || !clientName || !clientSurname || !clientPhoneNumber"
+                (click)="confirmReservation()"
+                class="confirm-button"
+              >
+                Confirm Reservation
+              </button>
+            </div>
           </div>
         </ng-container>
+        
       </ng-container>
     </nz-modal>
   </ng-container>
 
-  <!--WAITER-->
+  <!-- Waiter View -->
   <ng-container *ngIf="userRole === 'Waiter'">
     <div class="reservation-container">
       <div *ngFor="let table of tables" class="table-box">
         <button
           nz-button
-          [nzType]="getStatusType(table.status)"
-          class="table-button"
+          [nzType]="getStatusType(table.tableStatus)"
+          [nzDanger]="table.tableStatus === 3"
           (click)="onTableClick(table)"
+          class="table-button"
         >
-          {{ table.number }}
+          {{ table.id }}
         </button>
       </div>
     </div>
+
+    <!-- Waiter Modal -->
     <nz-modal
-  [(nzVisible)]="isModalVisible"
-  nzTitle="Manage Table"
-  (nzOnCancel)="handleCancel()"
-  [nzFooter]="null"
-  class="waiter-modal"
->
-  <ng-container *nzModalContent>
-    <div *ngIf="selectedTable">
-      <p><strong>Table Number:</strong> {{ selectedTable.number }}</p>
-      <p><strong>Seats:</strong> {{ selectedTable.seats }}</p>
-      <p><strong>Status:</strong> {{ selectedTable.status }}</p>
-      <p><strong>Current Order:</strong> {{ selectedTable.order || 'No orders assigned' }}</p>
+      [(nzVisible)]="isModalVisible"
+      nzTitle="Manage Table"
+      (nzOnCancel)="handleCancel()"
+      [nzFooter]="null"
+      class="waiter-modal"
+    >
+      <ng-container *nzModalContent>
+        <div *ngIf="selectedTable">
+          <p><strong>Table Number:</strong> {{ selectedTable.id }}</p>
+          <p><strong>Seats:</strong> {{ selectedTable.seats }}</p>
+          <p><strong>Status:</strong> {{ getStatusLabel() }}</p>
+          <p>
+            <strong>Current Order:</strong>
+            {{ selectedTable.order ? 'Order Assigned' : 'No orders assigned' }}
+          </p>
 
-      <!-- Update Table Status -->
-      <h3>Update Table Status</h3>
-      <div class="status-buttons">
-        <button
-          *ngFor="let status of tableStatuses"
-          nz-button
-          [nzType]="status === selectedTable.status ? 'primary' : 'default'"
-          (click)="updateTableStatus(status)"
-        >
-          {{ status }}
-        </button>
-      </div>
+          <!-- Update Table Status -->
+          <h3>Update Table Status</h3>
+          <div class="status-buttons">
+            <button
+              *ngFor="let status of tableStatusMap | keyvalue"
+              nz-button
+              [nzType]="status.value === selectedTable.tableStatus ? 'primary' : 'default'"
+              (click)="updateTableStatus(status.key)"
+            >
+              {{ status.key }}
+            </button>
+          </div>
 
-      <!-- Assign Order -->
-      <h3>Assign Order</h3>
-      <input
-        nz-input
-        placeholder="Enter order details"
-        [(ngModel)]="newOrder"
-        class="order-input"
-      />
-      <button
-        nz-button
-        nzType="primary"
-        (click)="assignOrderToTable(selectedTable)"
-        class="assign-order-button"
-      >
-        Assign Order
-      </button>
-      <button
-        nz-button
-        nzType="default"
-        (click)="handleCancel()"
-        class="assign-order-button"
-      >
-        OK
-      </button>
-    </div>
+          <!-- Order Management -->
+          <h3>Order Management</h3>
+          <div class="button-group">
+            <button
+              nz-button
+              nzType="primary"
+              (click)="openAssignOrderModal()"
+              class="assign-order-button"
+            >
+              Assign Order
+            </button>
+            <button
+              nz-button
+              nzType="default"
+              [disabled]="!selectedTable.order"
+              (click)="viewOrderDetails()"
+              class="view-order-button"
+            >
+              View Order
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </nz-modal>
+
+    <!-- Assign Order Modal -->
+    <nz-modal
+      [(nzVisible)]="isAssignOrderModalVisible"
+      nzTitle="Assign Order"
+      (nzOnCancel)="closeAssignOrderModal()"
+      [nzFooter]="null"
+      class="assign-order-modal"
+    >
+      <ng-container *nzModalContent>
+        <div class="menu">
+          <div class="category-icons">
+            <div
+              *ngFor="let category of categories"
+              class="icon"
+              (click)="onCategoryChange(category)"
+            >
+              <span nz-icon [nzType]="category.icon" nzTheme="outline"></span>
+            </div>
+          </div>
+
+          <h2 class="category-name">{{ selectedCategory.name }}</h2>
+
+          <div class="menu-content">
+            <nz-table [nzData]="allItems" [nzBordered]="true" [nzSize]="'small'">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of allItems">
+                  <td>{{ item.foodName }}</td>
+                  <td>${{ item.price }}</td>
+                  <td>
+                    <!--<input
+                      nz-input
+                      type="number"
+                      min="0"
+                      [(ngModel)]="item.quantity"
+                      class="quantity-input"
+                    />-->
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+          <div class="modal-footer">
+            <button nz-button nzType="default" (click)="closeAssignOrderModal()">Cancel</button>
+            <button nz-button nzType="primary" (click)="confirmAssignOrder()">Confirm</button>
+          </div>
+        </div>
+      </ng-container>
+    </nz-modal>
   </ng-container>
-</nz-modal>
-  </ng-container>
-
 </div>

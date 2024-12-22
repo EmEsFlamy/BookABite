@@ -7,8 +7,10 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { MainModule } from './modules/main/main.module';
-import { IconService } from './modules/shared/IconService';
+
 import { HttpClientModule } from '@angular/common/http';
+import { registerCustomIcons } from './modules/shared/IconService';
+import { NzIconService } from 'ng-zorro-antd/icon';
 
 registerLocaleData(pl);
 
@@ -25,9 +27,11 @@ registerLocaleData(pl);
         MainModule,
         SharedModule
     ],
-    providers: [
-        IconService
-    ],
+    providers: [],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+    constructor(private iconService: NzIconService) {
+        registerCustomIcons(this.iconService);
+      }
+}

@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { NzButtonType } from 'ng-zorro-antd/button';
-import { ChangeDetectorRef } from '@angular/core';
+import { BaseTable, GuestTable, WaiterTable, ReservationService, Order, ReservationPayload } from '../../../../../services/reservation.service';
+import { MenuService, MenuItem } from '../../../../../services/menu.service';
 
-interface Table {
-  number: number;
-  status: 'Available' | 'Reserved' | 'Occupied' | 'Cleaning';
-  seats: number;
-  order?: string;
+interface Category {
+  name: string;
+  icon: string;
 }
-
 
 @Component({
   selector: 'app-reservation',
@@ -16,150 +14,285 @@ interface Table {
   styleUrls: ['./reservation.component.css']
 })
 export class ReservationComponent {
-  tables: Table[] = [
-    { number: 1, status: 'Available', seats: 4 },
-    { number: 2, status: 'Available', seats: 4 },
-    { number: 3, status: 'Available', seats: 4 },
-    { number: 4, status: 'Available', seats: 4 },
-    { number: 5, status: 'Available', seats: 4 },
-    { number: 6, status: 'Available', seats: 4 },
-    { number: 7, status: 'Available', seats: 4 },
-    { number: 8, status: 'Reserved', seats: 4 },
-    { number: 9, status: 'Available', seats: 4 },
-    { number: 10, status: 'Available', seats: 4 },
-    { number: 11, status: 'Available', seats: 4 },
-    { number: 12, status: 'Available', seats: 4 },
-    { number: 13, status: 'Available', seats: 4 },
-    { number: 14, status: 'Reserved', seats: 4 },
-    { number: 15, status: 'Available', seats: 4 },
-    { number: 16, status: 'Occupied', seats: 4 },
-    { number: 17, status: 'Available', seats: 4 },
-    { number: 18, status: 'Available', seats: 4 },
-    { number: 19, status: 'Available', seats: 4 },
-    { number: 20, status: 'Available', seats: 4 },
-    { number: 21, status: 'Occupied', seats: 4 },
-    { number: 22, status: 'Available', seats: 4 },
-    { number: 23, status: 'Available', seats: 4 },
-    { number: 24, status: 'Available', seats: 4 },
-    { number: 25, status: 'Available', seats: 4 },
-    { number: 26, status: 'Available', seats: 4 },
-    { number: 27, status: 'Available', seats: 4 },
-    { number: 28, status: 'Cleaning', seats: 4 },
-    { number: 29, status: 'Available', seats: 4 },
-    { number: 30, status: 'Available', seats: 4 },
-    { number: 31, status: 'Available', seats: 4 },
-    { number: 32, status: 'Available', seats: 4 },
-    { number: 33, status: 'Available', seats: 4 },
-    { number: 34, status: 'Available', seats: 4 },
+  tables: GuestTable[] = [];
+  categories: Category[] = [
+    { name: 'Starters', icon: 'custom-starters:antd' },
+    { name: 'Soups', icon: 'custom-soups:antd' },
+    { name: 'Main', icon: 'custom-main:antd' },
+    { name: 'Kids', icon: 'custom-kids:antd' },
+    { name: 'Salads', icon: 'custom-salads:antd' },
+    { name: 'Drinks', icon: 'coffee' },
+    { name: 'Alcohol', icon: 'custom-alcohol:antd' },
   ];
+  timeSlots: string[] = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
 
   isModalVisible = false;
-  selectedTable: Table | null = null;
-  currentStep: number = 1;
-  timeSlots: string[] = [
-    '10:00 - 11:00',
-    '11:00 - 12:00',
-    '12:00 - 13:00',
-    '13:00 - 14:00',
-    '14:00 - 15:00',
-    '15:00 - 16:00',
-    '16:00 - 17:00'
-  ];
+  isAssignOrderModalVisible = false;
+
+  selectedCategory: Category = this.categories[0];
+  allItems: MenuItem[] = [];
+  menuItems: { [key: string]: MenuItem[] } = {};
+  selectedTable: any;
+  currentStep = 1;
   selectedSlots: number[] = [];
-  newStatus: string = '';
-  newOrder: string = '';
-  userRole: string = '';
-  selectedStatus: string = '';
-  tableStatuses: string[] = ['Available', 'Occupied', 'Cleaning'];
+  newStatus = '';
+  newOrder = '';
+  userRole = '';
+  selectedStatus = '';
+  clientName = '';
+  clientSurname = '';
+  clientPhoneNumber = '';
+  
 
- 
+  reverseTableStatusMap: { [key: number]: string } = {
+    0: 'Available',
+    1: 'Reserved',
+    2: 'Occupied',
+    3: 'Cleaning',
+    4: 'Disabled'
+  };
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  tableStatusMap: { [key: string]: number } = {
+    Available: 0,
+    Reserved: 1,
+    Occupied: 2,
+    Cleaning: 3,
+    Disabled: 4
+  };
+
+  tableStatusOptions = Object.keys(this.tableStatusMap);
+
+  constructor(private reservationService: ReservationService, private menuService: MenuService) {}
 
   ngOnInit(): void {
     const userType = sessionStorage.getItem('userType');
-    const token = sessionStorage.getItem('token');
-    //const isLoggedIn = 'true';
-    if(userType){
-      this.userRole = userType
-    }else{
-      this.userRole = 'Guest';
-    }
-    
+    this.userRole = userType || 'Guest';
     console.log('User role:', this.userRole);
+    this.fetchTables();
+    
   }
 
-  onTableClick(table: Table) {
-    this.selectedTable = table;
+  // Fetch tables from the service
+  fetchTables(): void {
+    this.reservationService.getTables().subscribe(
+      (data: BaseTable[]) => {
+        this.tables = data.map((table) => ({
+          ...table,
+        }));
+        console.log('Fetched tables:', this.tables);
+      },
+      (error) => {
+        console.error('Error fetching tables:', error);
+      }
+    );
+  }
+
+  getStatusLabel(): string {
+    if (!this.selectedTable) return 'Unknown';
+    return this.reverseTableStatusMap[this.selectedTable.tableStatus] || 'Unknown';
+  }
+
+  // Handle table click events
+  onTableClick(table: GuestTable): void {
+    if(table.tableStatus === 4 && this.userRole === 'Guest') {
+      return;
+    }
+    this.selectedTable = { ...table };
     this.isModalVisible = true;
 
     if (this.userRole === 'Guest') {
       this.currentStep = 1;
       this.selectedSlots = [];
     }
+    console.log('Selected Table:', this.selectedTable);
   }
 
-  goToStep(step: number) {
+  // Navigation between modal steps
+  goToStep(step: number): void {
     this.currentStep = step;
   }
 
+  // Close modal
   handleCancel(): void {
     this.isModalVisible = false;
+    this.resetSelections();
+  }
+
+  // Reset selections
+  private resetSelections(): void {
     this.selectedSlots = [];
     this.newStatus = '';
     this.newOrder = '';
+    this.selectedTable = null;
   }
 
-  onTimeSlotClick(index: number) {
+  // Handle time slot selection
+  onTimeSlotClick(index: number): void {
     if (this.selectedSlots.includes(index)) {
       this.selectedSlots = this.selectedSlots.filter((slot) => slot !== index);
     } else {
-        this.selectedSlots.push(index);
-        this.selectedSlots.sort((a, b) => a - b);
+      this.selectedSlots.push(index);
+      this.selectedSlots.sort((a, b) => a - b);
     }
   }
 
-  confirmReservation() {
-    console.log('Reserved table:', this.selectedTable);
-    console.log('Selected time slots:', this.selectedSlots.map((i) => this.timeSlots[i]));
-    if (this.selectedTable) {
-      this.selectedTable.status = 'Reserved';
-      console.log('Updated reserved table:', this.selectedTable);
+  confirmReservation(): void {
+    if (this.selectedTable && this.selectedSlots.length > 0) {
+      let reservationStart: string = '';
+      let reservationEnd: string = '';
+  
+      const selectedDate = new Date();
+  
+      if (this.selectedSlots.length > 1) {
+        reservationStart = `${selectedDate.toISOString().split('T')[0]}T${this.timeSlots[this.selectedSlots[0]]}Z`;
+        reservationEnd = `${selectedDate.toISOString().split('T')[0]}T${this.timeSlots[this.selectedSlots[this.selectedSlots.length - 1]]}Z`;
+      } else if (this.selectedSlots.length === 1) {
+        reservationStart = `${selectedDate.toISOString().split('T')[0]}T${this.timeSlots[this.selectedSlots[0]]}Z`;
+        const startTime = new Date(selectedDate.toISOString().split('T')[0] + 'T' + this.timeSlots[this.selectedSlots[0]] + 'Z');
+        startTime.setHours(startTime.getHours() + 1);
+        reservationEnd = startTime.toISOString();
+      }
+  
+      const reservationPayload: ReservationPayload = {
+        id: Math.floor(Math.random() * 1000),
+        tableId: this.selectedTable.id,
+        reservationStart: reservationStart,
+        reservationEnd: reservationEnd,
+        isActive: true,
+        isCompleted: false,
+        clientName: this.clientName,
+        clientSurname: this.clientSurname,
+        clientPhoneNumber: this.clientPhoneNumber,
+      };
+  
+      console.log('Confirming reservation with payload:', reservationPayload);
+  
+      this.reservationService.reserveTable(reservationPayload).subscribe(
+        (response) => {
+          console.log('Reservation confirmed successfully:', response);
+          this.fetchTables();
+          this.handleCancel();
+        },
+        (error) => {
+          console.error('Error confirming reservation:', error);
+          if (error.error) {
+            console.error('Server Error:', error.error);
+          } else {
+            console.error('HTTP Error:', error.message);
+          }
+        }
+      );
+    } else {
+      console.warn('Selected table or time slots are not available.');
     }
-    this.handleCancel();
   }
+  
+  
+  
+  
+  
 
+  // Update table status
   updateTableStatus(newStatus: string): void {
-    if (this.selectedTable) {
-      this.selectedTable.status = newStatus as Table['status'];
-      console.log(`Table ${this.selectedTable.number} status updated to:`, newStatus);
-      this.cdr.detectChanges();
+    if (!this.selectedTable) {
+      console.error('No table selected');
+      return;
+    }
+  
+    const statusValue = this.tableStatusMap[newStatus];
+  
+    if (statusValue === undefined) {
+      console.error('Invalid status selected');
+      return;
+    }
+  
+    const payload: BaseTable = {
+      id: this.selectedTable.id,
+      seats: this.selectedTable.seats,
+      tableStatus: statusValue,
+    };
+  
+    console.log('Sending payload to API:', payload);
+  
+    this.reservationService.updateTable(payload).subscribe(
+      (response) => {
+        console.log('Table status updated successfully:', response);
+        this.selectedTable!.tableStatus = statusValue;
+        this.fetchTables();
+      },
+      (error) => {
+        console.error('Error updating table status:', error);
+      }
+    );
+  }
+
+  openAssignOrderModal(): void {
+    this.isAssignOrderModalVisible = true;
+  }
+
+  closeAssignOrderModal(): void {
+    this.isAssignOrderModalVisible = false;
+  }
+
+  viewOrderDetails(): void {
+    if (this.selectedTable && this.selectedTable.order) {
+      console.log('Viewing order details for Table:', this.selectedTable.id);
+      console.log('Order:', this.selectedTable.order);
     }
   }
 
-  assignOrderToTable(table: Table): void {
-    if (this.newOrder.trim()) {
-      table.order = this.newOrder.trim();
-      console.log(`Order "${this.newOrder}" assigned to Table ${table.number}`);
+  onCategoryChange(category: Category): void {
+    this.selectedCategory = category;
+    console.log('Selected category:', this.selectedCategory);
+  }
+
+  confirmAssignOrder(): void {
+    if (this.newOrder.trim() && this.selectedTable) {
+      const order: Order = {
+        id: Math.floor(Math.random() * 1000),
+        fullPrice: 150,
+        timeStart: new Date().toISOString(),
+        timeEnd: new Date(new Date().getTime() + 60 * 60 * 1000).toISOString(),
+        orderStatus: 1,
+        customerName: 'John Doe',
+        specialInstructions: 'Extra napkins, please.',
+        items: [
+          { name: 'Pasta Carbonara', quantity: 2, price: 15 },
+          { name: 'Caesar Salad', quantity: 1, price: 10 },
+          { name: 'Soft Drink', quantity: 3, price: 5 },
+        ],
+      };
+
+      this.selectedTable.order = order;
+
+      this.tables = this.tables.map((table) =>
+        table.id === this.selectedTable!.id ? { ...table, order } : table
+      );
+
+      console.log(`Order assigned to Table ${this.selectedTable.id}:`, order);
+
       this.newOrder = '';
-      this.isModalVisible = false;
+      this.closeAssignOrderModal();
     } else {
       alert('Please enter a valid order!');
     }
   }
 
-  getStatusType(status: string): NzButtonType {
+
+  getStatusType(status: number): NzButtonType{
     switch (status) {
-      case 'Available':
-        return 'default';
-      case 'Reserved':
-        return 'primary';
-      case 'Occupied':
-        return 'primary';
-      case 'Cleaning':
-        return 'dashed';
+      case 0:
+        return 'default';  // Available
+      case 1:
+        return 'primary';   // Reserved
+      case 2:
+        return 'primary';   // Occupied
+      case 3:
+        return 'primary';   // Cleaning
+      case 4:
+        return 'dashed';  // Disabled
       default:
-        return 'default';
+        return 'default';  // Default
     }
   }
 }
