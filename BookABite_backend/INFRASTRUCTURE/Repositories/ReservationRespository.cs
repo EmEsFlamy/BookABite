@@ -119,6 +119,7 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         er.ClientName = reservation.ClientName;
         er.ClientSurname = reservation.ClientSurname;
         er.ClientPhoneNumber = reservation.ClientPhoneNumber;
+        er.TableId = reservation.TableId;
 
         await _dbContext.SaveChangesAsync();
         return reservation;
