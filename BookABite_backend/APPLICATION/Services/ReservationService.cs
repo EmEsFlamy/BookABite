@@ -1,4 +1,5 @@
-﻿using DOMAIN.Models;
+﻿using DOMAIN.DTOs;
+using DOMAIN.Models;
 using DOMAIN.Repositories;
 using DOMAIN.Services;
 using Microsoft.Extensions.Logging;
@@ -84,6 +85,21 @@ namespace APPLICATION.Services
             else
             {
                 _logger.LogInformation("Updating reservation succed");
+            }
+            return result;
+        }
+
+        public async Task<List<ReservationDto>> GetDataAsync()
+        {
+            _logger.LogInformation("Getting all reservations");
+            var result = await _reservationRepository.GetDataAsync();
+            if (result == null || !result.Any())
+            {
+                _logger.LogWarning("No reservations found");
+            }
+            else
+            {
+                _logger.LogInformation($"Found {result.Count} reservations");
             }
             return result;
         }

@@ -68,5 +68,17 @@ namespace API.Controllers
             }
             return Ok(result);
         }
+
+        [AllowAnonymous]
+        [HttpGet("data")]
+        public async Task<IActionResult> GetDataAsync()
+        {
+            var result = await _reservationService.GetDataAsync();
+            if (result is null)
+            {
+                return NotFound("No reservations found");
+            }
+            return Ok(result);
+        }
     }
 }
