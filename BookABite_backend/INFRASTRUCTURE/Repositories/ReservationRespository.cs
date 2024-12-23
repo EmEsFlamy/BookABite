@@ -3,6 +3,7 @@ using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
 using infa = INFRASTRUCTURE.Entities;
 using Microsoft.EntityFrameworkCore;
+using DOMAIN.DTOs;
 
 
 namespace INFRASTRUCTURE.Repositories;
@@ -125,6 +126,20 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
         return reservation;
     }
 
-     
+    public async Task<List<ReservationDto>> GetDataAsync()
+    {
+        var reservations = await _dbContext.Reservations
+            .AsNoTracking()
+            .Select(r => new ReservationDto
+            {
+                ReservationStart = r.ReservationStart,
+                ReservationEnd = r.ReservationEnd,
+                TableId = r.TableId
+            })
+            .ToListAsync();
+
+        return reservations;
+    }
+
 }
 

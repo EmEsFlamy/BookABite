@@ -1,9 +1,5 @@
-﻿using DOMAIN.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DOMAIN.DTOs;
+using DOMAIN.Models;
 
 namespace DOMAIN.Repositories
 {
@@ -14,5 +10,6 @@ namespace DOMAIN.Repositories
         Task<Reservation> UpdateAsync(Reservation reservation);
         Task<bool> DeleteAsync(int reservationId);
         Task<List<Reservation>> GetAsync();
+        Task<List<ReservationDto>> GetDataAsync();
     }
 }
