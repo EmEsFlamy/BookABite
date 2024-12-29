@@ -1,0 +1,47 @@
+<div class="reservations-wrapper" *ngIf="userRole === 'Waiter'">
+  <h2>Reservations List</h2>
+  <nz-table
+  [nzBordered]="true"
+  [nzData]="paginatedReservations"
+  [nzSize]="'middle'"
+  [nzPageSize]="pageSize"
+  [nzPageIndex]="currentPage"
+  [nzTotal]="reservations.length"
+  [nzShowPagination]="reservations.length > pageSize"
+  (nzPageIndexChange)="onPageChange($event)"
+>
+    <thead>
+      <tr>
+        <th nzWidth="10%">ID</th>
+        <th nzWidth="20%">Client Name</th>
+        <th nzWidth="20%">Client Phone</th>
+        <th nzWidth="20%">Table ID</th>
+        <th nzWidth="20%">Reservation Time</th>
+        <th nzWidth="10%">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reservation of paginatedReservations">
+        <td>{{ reservation.id }}</td>
+        <td>{{ reservation.clientName }} {{ reservation.clientSurname }}</td>
+        <td>{{ reservation.clientPhoneNumber }}</td>
+        <td>{{ reservation.tableId }}</td>
+        <td>
+          {{ reservation.reservationStart | date: 'shortTime' }} -
+          {{ reservation.reservationEnd | date: 'shortTime' }}
+        </td>
+        <td>
+          <span
+            [ngClass]="{
+              'status-active': reservation.isActive,
+              'status-completed': reservation.isCompleted && !reservation.isActive,
+              'status-pending': !reservation.isCompleted && !reservation.isActive
+            }"
+          >
+            {{ getReservationStatus(reservation) }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

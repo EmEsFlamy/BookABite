@@ -50,10 +50,7 @@ export class ReservationComponent {
 
   tableStatusMap: { [key: string]: number } = {
     Available: 0,
-    Reserved: 1,
     Occupied: 2,
-    Cleaning: 3,
-    Disabled: 4
   };
 
   tableStatusOptions = Object.keys(this.tableStatusMap);

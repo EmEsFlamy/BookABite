@@ -6,6 +6,7 @@ import { MainComponent } from './main.component';
 import { AboutComponent } from './components/about/about.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
+import { ReservationsListComponent } from './components/reservationsList/reservationsList.component';
 
 const routes: Routes = [
     {
@@ -33,6 +34,10 @@ const routes: Routes = [
                 path: 'reservation',
                 component: ReservationComponent,
             },
+            {
+                path: 'reservation/all',
+                component: ReservationsListComponent,
+            }
         ]
     },
 ];

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface BaseTable {
@@ -50,6 +50,13 @@ export class ReservationService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
+
   getTables(): Observable<GuestTable[]> {
     return this.http.get<GuestTable[]>(`${this.apiTableUrl}/all`);
   }
@@ -66,5 +73,9 @@ export class ReservationService {
     return this.http.get<{ tableId: number; reservationStart: string; reservationEnd: string }[]>(
       `${this.apiReservationUrl}/data`
     );
+  }
+
+  getReservationsAll(): Observable<any> {
+    return this.http.get(`${this.apiReservationUrl}/all`, { headers: this.getHeaders() });
   }
 }
