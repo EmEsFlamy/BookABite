@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NzButtonType } from 'ng-zorro-antd/button';
 import { BaseTable, GuestTable, WaiterTable, ReservationService, Order, ReservationPayload } from '../../../../../services/reservation.service';
 import { MenuService, MenuItem } from '../../../../../services/menu.service';
+import { MenuHelperService } from '../../../../../services/menu-helper.service';
 
 interface Category {
   name: string;
@@ -15,23 +16,16 @@ interface Category {
 })
 export class ReservationComponent {
   tables: GuestTable[] = [];
-  categories: Category[] = [
-    { name: 'Starters', icon: 'custom-starters:antd' },
-    { name: 'Soups', icon: 'custom-soups:antd' },
-    { name: 'Main', icon: 'custom-main:antd' },
-    { name: 'Kids', icon: 'custom-kids:antd' },
-    { name: 'Salads', icon: 'custom-salads:antd' },
-    { name: 'Drinks', icon: 'coffee' },
-    { name: 'Alcohol', icon: 'custom-alcohol:antd' },
-  ];
+  
   timeSlots: string[] = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
 
   isModalVisible = false;
   isAssignOrderModalVisible = false;
 
+  categories: Category[] = [];
+  menuItems: { [key: string]: MenuItem[] } = {};
   selectedCategory: Category = this.categories[0];
   allItems: MenuItem[] = [];
-  menuItems: { [key: string]: MenuItem[] } = {};
   selectedTable: any;
   currentStep = 1;
   selectedSlots: number[] = [];
@@ -42,6 +36,8 @@ export class ReservationComponent {
   clientName = '';
   clientSurname = '';
   clientPhoneNumber = '';
+  reservations: { tableId: number; reservationStart: string; reservationEnd: string }[] = [];
+  intervalId: any;
   
 
   reverseTableStatusMap: { [key: number]: string } = {
@@ -62,17 +58,44 @@ export class ReservationComponent {
 
   tableStatusOptions = Object.keys(this.tableStatusMap);
 
-  constructor(private reservationService: ReservationService, private menuService: MenuService) {}
+  constructor(private reservationService: ReservationService, private menuService: MenuService, private menuHelper: MenuHelperService) {}
 
   ngOnInit(): void {
     const userType = sessionStorage.getItem('userType');
     this.userRole = userType || 'Guest';
     console.log('User role:', this.userRole);
+  
     this.fetchTables();
-    
+    this.fetchReservations();
+    this.intervalId = setInterval(() => {
+      this.fetchTables();
+      this.fetchReservations();
+    }, 10000);
+
+    this.categories = this.menuHelper.categories;
+  
+    if (this.categories.length > 0) {
+      this.selectedCategory = this.categories[0];
+    } else {
+      console.warn('No categories found in MenuHelperService.');
+    }
+  
+    this.menuHelper.fetchMenuItems().then((menuItems: { [key: string]: MenuItem[] }) => {
+      this.menuItems = menuItems;
+      if (this.categories.length > 0) {
+        this.onCategoryChange(this.categories[0]);
+      }
+    }).catch(error => {
+      console.error('Error fetching menu items:', error);
+    });
   }
 
-  // Fetch tables from the service
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
   fetchTables(): void {
     this.reservationService.getTables().subscribe(
       (data: BaseTable[]) => {
@@ -83,6 +106,18 @@ export class ReservationComponent {
       },
       (error) => {
         console.error('Error fetching tables:', error);
+      }
+    );
+  }
+
+  fetchReservations(): void {
+    this.reservationService.getReservations().subscribe(
+      (data) => {
+        this.reservations = data;
+        console.log('Fetched reservations:', this.reservations);
+      },
+      (error) => {
+        console.error('Error fetching reservations:', error);
       }
     );
   }
@@ -172,6 +207,7 @@ export class ReservationComponent {
           console.log('Reservation confirmed successfully:', response);
           this.fetchTables();
           this.handleCancel();
+          this.fetchReservations();
         },
         (error) => {
           console.error('Error confirming reservation:', error);
@@ -185,6 +221,27 @@ export class ReservationComponent {
     } else {
       console.warn('Selected table or time slots are not available.');
     }
+  }
+
+  isSlotReserved(index: number): boolean {
+    const selectedTime = this.timeSlots[index];
+    const selectedDateTime = new Date(`2024-12-29T${selectedTime}:00Z`);
+  
+    if (this.reservations.some((reservation) => {
+      const reservationStart = new Date(reservation.reservationStart);
+      const reservationEnd = new Date(reservation.reservationEnd);
+  
+      return (
+        this.selectedTable &&
+        this.selectedTable.id === reservation.tableId &&
+        selectedDateTime >= reservationStart &&
+        selectedDateTime < reservationEnd
+      );
+    })) {
+      return true;
+    }
+  
+    return false;
   }
   
   
@@ -241,11 +298,6 @@ export class ReservationComponent {
     }
   }
 
-  onCategoryChange(category: Category): void {
-    this.selectedCategory = category;
-    console.log('Selected category:', this.selectedCategory);
-  }
-
   confirmAssignOrder(): void {
     if (this.newOrder.trim() && this.selectedTable) {
       const order: Order = {
@@ -276,6 +328,12 @@ export class ReservationComponent {
     } else {
       alert('Please enter a valid order!');
     }
+  }
+
+  onCategoryChange(category: Category): void {
+    const key = category.name.toLowerCase();
+    this.selectedCategory = category;
+    this.allItems = this.menuItems[key] || [];
   }
 
 

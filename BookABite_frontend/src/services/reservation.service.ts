@@ -61,4 +61,10 @@ export class ReservationService {
   updateTable(payload: { id: number; seats: number; tableStatus: number }): Observable<any> {
     return this.http.put(`${this.apiTableUrl}`, payload);
   }
+
+  getReservations(): Observable<{ tableId: number; reservationStart: string; reservationEnd: string }[]> {
+    return this.http.get<{ tableId: number; reservationStart: string; reservationEnd: string }[]>(
+      `${this.apiReservationUrl}/data`
+    );
+  }
 }

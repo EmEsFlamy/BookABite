@@ -8,8 +8,7 @@
         <button
           nz-button
           [nzType]="getStatusType(table.tableStatus)"
-          [nzDanger]="table.tableStatus === 2"
-          [disabled]="table.tableStatus === 3"
+          [nzDanger]="table.tableStatus === 3"
           class="table-button"
           (click)="onTableClick(table)"
         >
@@ -51,6 +50,7 @@
                 <button
                   nz-button
                   [nzType]="selectedSlots.includes(i) ? 'primary' : 'default'"
+                  [disabled]="isSlotReserved(i)"
                   (click)="onTimeSlotClick(i)"
                 >
                   {{ slot }}
@@ -210,7 +210,7 @@
           <h2 class="category-name">{{ selectedCategory.name }}</h2>
 
           <div class="menu-content">
-            <nz-table [nzData]="allItems" [nzBordered]="true" [nzSize]="'small'">
+            <nz-table [nzData]="allItems" [nzBordered]="true" [nzSize]="'small'" [nzShowPagination]="false">
               <thead>
                 <tr>
                   <th>Item</th>

@@ -175,3 +175,28 @@
     margin-top: 10px;
     width: 100%;
   }
+
+  .category-icons {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.category-icons .icon {
+    font-size: 42px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.category-icons .icon:hover {
+    color: #ff7043; 
+}
+
+.menu-content {
+  height: 400px;
+}
+
+.time-slot button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
