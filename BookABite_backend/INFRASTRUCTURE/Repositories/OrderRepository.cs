@@ -14,9 +14,7 @@ namespace INFRASTRUCTURE.Repositories
             var r = new Entities.Order()
             {
                 FullPrice = order.FullPrice,
-                TimeStart = order.TimeStart,
-                TimeEnd = order.TimeEnd,
-                OrderStatus = OrderStatusEnum.Ordered
+                OrderStatus = OrderStatusEnum.Ongoing
             };
             await _dbContext.Orders.AddAsync(r);
             await _dbContext.SaveChangesAsync();
@@ -39,13 +37,12 @@ namespace INFRASTRUCTURE.Repositories
 
         public async Task<Order> GetByIdAsync(int orderId)
         {
-            var r = await _dbContext.Orders.AsNoTracking().SingleOrDefaultAsync(order => order.Id == orderId);
-            return r is null ? null! : new Order
+            var o = await _dbContext.Orders.AsNoTracking().SingleOrDefaultAsync(order => order.Id == orderId);
+            return o is null ? null! : new Order
             {
-                Id = r.Id,
-                FullPrice = r.FullPrice,
-                TimeStart = r.TimeStart,
-                TimeEnd = r.TimeEnd
+                Id = o.Id,
+                FullPrice = o.FullPrice,
+                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus
             };
         }
 
@@ -57,8 +54,7 @@ namespace INFRASTRUCTURE.Repositories
             {
                 Id = o.Id,
                 FullPrice = o.FullPrice,
-                TimeStart = o.TimeStart,
-                TimeEnd = o.TimeEnd
+                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus
             }).ToList();
         }
 

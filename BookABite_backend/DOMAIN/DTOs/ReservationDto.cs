@@ -10,6 +10,7 @@ public class ReservationDto
 {
     public DateTime ReservationStart { get; set; }
     public DateTime ReservationEnd { get; set; }
+    public bool IsCompleted { get; set; } 
     public int TableId { get; set; }
 }
 

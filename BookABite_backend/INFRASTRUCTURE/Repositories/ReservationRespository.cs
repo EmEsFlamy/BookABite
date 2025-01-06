@@ -134,6 +134,7 @@ public class ReservationRespository(BookABiteDbContext dbContext) : IReservation
             {
                 ReservationStart = r.ReservationStart,
                 ReservationEnd = r.ReservationEnd,
+                IsCompleted = r.IsCompleted,
                 TableId = r.TableId
             })
             .ToListAsync();
