@@ -3,6 +3,7 @@ using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
 using INFRASTRUCTURE.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace INFRASTRUCTURE.Repositories
 {
@@ -11,14 +12,27 @@ namespace INFRASTRUCTURE.Repositories
         private readonly BookABiteDbContext _dbContext = dbContext;
         public async Task<Order> CreateAsync(Order order)
         {
+            var fPrice = _dbContext.Menus.AsNoTracking().Where(x => order.MenuIds.Contains(x.Id)).Select(y => y.Price).Sum();
             var r = new Entities.Order()
             {
-                FullPrice = order.FullPrice,
-                OrderStatus = OrderStatusEnum.Ongoing
+                FullPrice = fPrice,
+                OrderStatus = OrderStatusEnum.Ongoing,
+                TableId = order.TableId,
+                UserId = order.UserId
             };
             await _dbContext.Orders.AddAsync(r);
             await _dbContext.SaveChangesAsync();
             order.Id = r.Id;
+            order.FullPrice = fPrice;
+            foreach (var menuId in order.MenuIds)
+            {
+                await _dbContext.MenuOrders.AddAsync(new Entities.MenuOrder
+                {
+                    MenuId = menuId,
+                    OrderId = r.Id
+                });
+            }
+            await _dbContext.SaveChangesAsync();
             return order;
         }
 

@@ -3,6 +3,7 @@ using System;
 using INFRASTRUCTURE.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(BookABiteDbContext))]
-    partial class BookABiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250109195544_Restructure")]
+    partial class Restructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,9 +368,11 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TableId");
+                    b.HasIndex("TableId")
+                        .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Orders");
                 });
@@ -680,8 +685,8 @@ namespace INFRASTRUCTURE.Migrations
                         {
                             Id = 1,
                             Name = "Admin",
-                            Password = new byte[] { 203, 83, 92, 38, 211, 83, 81, 207, 13, 245, 166, 6, 97, 90, 86, 86, 103, 199, 245, 191, 109, 2, 106, 201, 220, 111, 34, 149, 164, 3, 32, 131 },
-                            PasswordSalt = new byte[] { 52, 7, 144, 213, 169, 147, 235, 100, 175, 173, 150, 203, 117, 54, 116, 238 },
+                            Password = new byte[] { 123, 161, 77, 1, 153, 169, 114, 171, 249, 121, 81, 100, 99, 216, 165, 188, 220, 183, 44, 143, 64, 212, 94, 44, 66, 46, 198, 132, 56, 124, 131, 120 },
+                            PasswordSalt = new byte[] { 5, 149, 150, 187, 63, 134, 154, 174, 33, 68, 204, 23, 30, 17, 69, 119 },
                             Surname = "Admin",
                             UserType = 0,
                             Username = "admin"
@@ -690,8 +695,8 @@ namespace INFRASTRUCTURE.Migrations
                         {
                             Id = 2,
                             Name = "Waiter",
-                            Password = new byte[] { 97, 7, 220, 173, 117, 134, 71, 82, 111, 251, 137, 150, 4, 116, 17, 127, 87, 78, 91, 254, 53, 225, 51, 254, 245, 184, 223, 69, 40, 52, 233, 171 },
-                            PasswordSalt = new byte[] { 4, 200, 80, 168, 96, 249, 30, 54, 229, 41, 86, 211, 147, 244, 148, 131 },
+                            Password = new byte[] { 173, 108, 95, 162, 254, 161, 120, 91, 28, 198, 182, 43, 115, 252, 144, 18, 77, 120, 72, 204, 31, 65, 124, 66, 185, 240, 78, 14, 141, 173, 204, 224 },
+                            PasswordSalt = new byte[] { 161, 120, 236, 166, 87, 29, 148, 155, 105, 136, 74, 208, 162, 103, 199, 176 },
                             Surname = "Waiter",
                             UserType = 1,
                             Username = "waiter"
@@ -720,14 +725,14 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("INFRASTRUCTURE.Entities.Order", b =>
                 {
                     b.HasOne("INFRASTRUCTURE.Entities.Table", "Table")
-                        .WithMany("Orders")
-                        .HasForeignKey("TableId")
+                        .WithOne("Order")
+                        .HasForeignKey("INFRASTRUCTURE.Entities.Order", "TableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("INFRASTRUCTURE.Entities.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
+                        .WithOne("Order")
+                        .HasForeignKey("INFRASTRUCTURE.Entities.Order", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -759,14 +764,14 @@ namespace INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("INFRASTRUCTURE.Entities.Table", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Order");
 
                     b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("INFRASTRUCTURE.Entities.User", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Order");
                 });
 #pragma warning restore 612, 618
         }
