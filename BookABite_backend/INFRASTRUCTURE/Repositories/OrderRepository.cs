@@ -37,41 +37,83 @@ namespace INFRASTRUCTURE.Repositories
 
         public async Task<Order> GetByIdAsync(int orderId)
         {
-            var o = await _dbContext.Orders.AsNoTracking().SingleOrDefaultAsync(order => order.Id == orderId);
-            return o is null ? null! : new Order
+            var o = await _dbContext.Orders
+                .AsNoTracking()
+                .Include(order => order.OrdersMenu)
+                .ThenInclude(menuOrder => menuOrder.Menu)
+                .SingleOrDefaultAsync(order => order.Id == orderId);
+
+            if (o is null)
+            {
+                return null!;
+            }
+
+            return new Order
             {
                 Id = o.Id,
                 FullPrice = o.FullPrice,
-                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus
+                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus,
+                TableId = o.TableId,
+                UserId = o.UserId,
+                MenuIds = o.OrdersMenu.Select(mo => mo.MenuId).ToList()
             };
         }
 
         public async Task<List<Order>> GetAsync()
         {
-            var orders = await _dbContext.Orders.AsNoTracking().ToListAsync();
+            var orders = await _dbContext.Orders
+                .AsNoTracking()
+                .Include(order => order.OrdersMenu)
+                .ThenInclude(menuOrder => menuOrder.Menu)
+                .ToListAsync();
 
             return orders.Select(o => new Order
             {
                 Id = o.Id,
                 FullPrice = o.FullPrice,
-                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus
+                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus,
+                TableId = o.TableId,
+                UserId = o.UserId,
+                MenuIds = o.OrdersMenu.Select(mo => mo.MenuId).ToList()
             }).ToList();
         }
 
+
         public async Task<Order> UpdateAsync(Order order)
         {
-            var er = await _dbContext.Orders.FirstOrDefaultAsync(r => r.Id == order.Id);
+            var er = await _dbContext.Orders
+                .Include(o => o.OrdersMenu)
+                .FirstOrDefaultAsync(r => r.Id == order.Id);
 
             if (er is null)
             {
-                return null;
+                return null!;
             }
 
-           er.FullPrice = order.FullPrice;
-           er.OrderStatus = (OrderStatusEnum)order.OrderStatus;
+            er.FullPrice = order.FullPrice;
+            er.OrderStatus = (OrderStatusEnum)order.OrderStatus;
+
+            var existingMenuOrders = er.OrdersMenu.ToList();
+            var newMenuOrders = order.MenuIds.Except(existingMenuOrders.Select(mo => mo.MenuId)).ToList();
+            var removedMenuOrders = existingMenuOrders.Where(mo => !order.MenuIds.Contains(mo.MenuId)).ToList();
+
+            foreach (var removedMenuOrder in removedMenuOrders)
+            {
+                _dbContext.MenuOrders.Remove(removedMenuOrder);
+            }
+
+            foreach (var newMenuId in newMenuOrders)
+            {
+                er.OrdersMenu.Add(new Entities.MenuOrder
+                {
+                    MenuId = newMenuId,
+                    OrderId = er.Id
+                });
+            }
 
             await _dbContext.SaveChangesAsync();
             return order;
         }
+
     }
 }
