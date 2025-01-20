@@ -1,7 +1,6 @@
 ﻿
 
-
-namespace INFRASTRUCTURE.Entities;
+namespace DOMAIN.Models;
 
 public class MenuOrder
 {

@@ -12,7 +12,15 @@ namespace INFRASTRUCTURE.Repositories
         private readonly BookABiteDbContext _dbContext = dbContext;
         public async Task<Order> CreateAsync(Order order)
         {
-            var fPrice = _dbContext.Menus.AsNoTracking().Where(x => order.MenuIds.Contains(x.Id)).Select(y => y.Price).Sum();
+            var menuIds = order.MenuIds.Keys.ToList();
+
+            var menus = await _dbContext.Menus
+        .Where(m => menuIds.Contains(m.Id))
+        .ToListAsync();
+
+            var fPrice = menus
+        .Sum(m => m.Price * order.MenuIds[m.Id]);
+
             var r = new Entities.Order()
             {
                 FullPrice = fPrice,
@@ -24,13 +32,19 @@ namespace INFRASTRUCTURE.Repositories
             await _dbContext.SaveChangesAsync();
             order.Id = r.Id;
             order.FullPrice = fPrice;
-            foreach (var menuId in order.MenuIds)
+
+            foreach (var menuItem in order.MenuIds)
             {
-                await _dbContext.MenuOrders.AddAsync(new Entities.MenuOrder
-                {
-                    MenuId = menuId,
-                    OrderId = r.Id
-                });
+                var menuId = menuItem.Key;
+                var quantity = menuItem.Value;
+
+                    await _dbContext.MenuOrders.AddAsync(new Entities.MenuOrder
+                    {
+                        MenuId = menuId,
+                        OrderId = r.Id,
+                        Quantity = quantity                 
+                    });
+                
             }
             await _dbContext.SaveChangesAsync();
             return order;
@@ -66,12 +80,14 @@ namespace INFRASTRUCTURE.Repositories
             {
                 Id = o.Id,
                 FullPrice = o.FullPrice,
-                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus,
                 TableId = o.TableId,
                 UserId = o.UserId,
-                MenuIds = o.OrdersMenu.Select(mo => mo.MenuId).ToList()
+                OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus,
+                MenuIds = o.OrdersMenu.ToDictionary(mo => mo.MenuId, mo => mo.Quantity)
             };
         }
+
+
 
         public async Task<List<Order>> GetAsync()
         {
@@ -88,7 +104,7 @@ namespace INFRASTRUCTURE.Repositories
                 OrderStatus = (DOMAIN.Enums.OrderStatusEnum)o.OrderStatus,
                 TableId = o.TableId,
                 UserId = o.UserId,
-                MenuIds = o.OrdersMenu.Select(mo => mo.MenuId).ToList()
+                MenuIds = o.OrdersMenu.ToDictionary(mo => mo.MenuId, mo => mo.Quantity)
             }).ToList();
         }
 
@@ -108,26 +124,36 @@ namespace INFRASTRUCTURE.Repositories
             er.OrderStatus = (OrderStatusEnum)order.OrderStatus;
 
             var existingMenuOrders = er.OrdersMenu.ToList();
-            var newMenuOrders = order.MenuIds.Except(existingMenuOrders.Select(mo => mo.MenuId)).ToList();
-            var removedMenuOrders = existingMenuOrders.Where(mo => !order.MenuIds.Contains(mo.MenuId)).ToList();
+            var newMenuIds = order.MenuIds.Keys.Except(existingMenuOrders.Select(mo => mo.MenuId)).ToList();
+            var removedMenuOrders = existingMenuOrders.Where(mo => !order.MenuIds.ContainsKey(mo.MenuId)).ToList();
 
             foreach (var removedMenuOrder in removedMenuOrders)
             {
                 _dbContext.MenuOrders.Remove(removedMenuOrder);
             }
 
-            foreach (var newMenuId in newMenuOrders)
+            foreach (var existingMenuOrder in existingMenuOrders)
+            {
+                if (order.MenuIds.TryGetValue(existingMenuOrder.MenuId, out var newQuantity))
+                {
+                    existingMenuOrder.Quantity = newQuantity;
+                }
+            }
+
+            foreach (var newMenuId in newMenuIds)
             {
                 er.OrdersMenu.Add(new Entities.MenuOrder
                 {
                     MenuId = newMenuId,
-                    OrderId = er.Id
+                    OrderId = er.Id,
+                    Quantity = order.MenuIds[newMenuId]
                 });
             }
 
             await _dbContext.SaveChangesAsync();
             return order;
         }
+
 
     }
 }

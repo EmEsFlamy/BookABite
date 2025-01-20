@@ -8,6 +8,6 @@ public class Order
     public decimal FullPrice { get; set; }
     public int TableId { get; set; }
     public int UserId { get; set; }
-    public List<int> MenuIds { get; set; }
+    public Dictionary<int, int> MenuIds { get; set; }
     public OrderStatusEnum OrderStatus { get; set; }
 }
