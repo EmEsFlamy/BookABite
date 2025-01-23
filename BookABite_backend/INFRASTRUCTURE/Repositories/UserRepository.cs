@@ -2,7 +2,9 @@
 using DOMAIN.Repositories;
 using INFRASTRUCTURE.Database;
 using INFRASTRUCTURE.Enums;
+using INFRASTRUCTURE.Security;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 
 namespace INFRASTRUCTURE.Repositories
@@ -101,6 +103,24 @@ namespace INFRASTRUCTURE.Repositories
 
             await _dbContext.SaveChangesAsync();
             return user;    
+        }
+
+        public async Task<bool> ChangePasswordAsync(UserPasswordUpdate userPasswordUpdate)
+        {
+            var er = await _dbContext.Users.FirstOrDefaultAsync(r => r.Id == userPasswordUpdate.UserId);
+
+            if (er is null)
+            {
+                return false;
+            }
+            var pass = PasswordHasher.HashPassword(Encoding.UTF8.GetBytes(userPasswordUpdate.Password));
+
+            er.Password = pass.Hash;
+            er.PasswordSalt = pass.Salt;
+
+            await _dbContext.SaveChangesAsync();
+            return true;
+
         }
 
         

@@ -12,5 +12,6 @@ public interface IUserService
     Task<bool> DeleteAsync(int userId);
     Task<List<User>> GetAsync();
     Task<User> GetByEmailAsync(string email);
+    Task<bool> ChangePasswordAsync(UserPasswordUpdate userPasswordUpdate);
 
 }

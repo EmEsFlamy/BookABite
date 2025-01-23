@@ -44,4 +44,10 @@ public class UserService(IUserRepository userRepository) : IUserService
         var result = await _userRepository.UpdateAsync(user);
         return result;
     }
+
+    public async Task<bool> ChangePasswordAsync(UserPasswordUpdate userPasswordUpdate)
+    {
+        var result = await _userRepository.ChangePasswordAsync(userPasswordUpdate);
+        return result;
+    }
 }

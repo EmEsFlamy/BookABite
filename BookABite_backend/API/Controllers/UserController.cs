@@ -119,4 +119,15 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
         }
         return Ok(result);
     }
+
+    [HttpPut("changePassword")]
+    public async Task<IActionResult> ChangePasswordAsync(UserPasswordUpdate userPasswordUpdate)
+    {
+        var result = await _userService.ChangePasswordAsync(userPasswordUpdate);
+        if (result is false)
+        {
+            return NotFound("Cannot change password!");
+        }
+        return Ok(result);
+    }
 }
