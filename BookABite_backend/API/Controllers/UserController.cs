@@ -1,5 +1,4 @@
 ﻿using APPLICATION.Security;
-using APPLICATION.Services;
 using DOMAIN.Models;
 using DOMAIN.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -92,9 +91,17 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync(User user)
+    public async Task<IActionResult> UpdateAsync(UserUpdate userUpdate)
     {
+        var user = new User
+        {
+            Name = userUpdate.Name,
+            Surname = userUpdate.Surname,
+            Username = userUpdate.Username,
+            UserType = userUpdate.UserType
+        };
         var result = await _userService.UpdateAsync(user);
+
         if (result is null)
         {
             return BadRequest("Cannot update this resource!");
