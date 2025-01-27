@@ -3,4 +3,4 @@
 
 namespace DOMAIN.Models;
 
-public record UserUpdate(string Name, string Surname, string Username, UserTypeEnum UserType);
+public record UserUpdate(int UserId, string Name, string Surname, string Username, UserTypeEnum UserType);

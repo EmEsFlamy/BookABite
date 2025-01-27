@@ -95,6 +95,7 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
     {
         var user = new User
         {
+            Id = userUpdate.UserId,
             Name = userUpdate.Name,
             Surname = userUpdate.Surname,
             Username = userUpdate.Username,
