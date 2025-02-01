@@ -120,7 +120,15 @@ namespace INFRASTRUCTURE.Repositories
                 return null!;
             }
 
-            er.FullPrice = order.FullPrice;
+            var menuIds = order.MenuIds.Keys.ToList();
+            var menus = await _dbContext.Menus
+                .Where(m => menuIds.Contains(m.Id))
+                .ToListAsync();
+
+            var fPrice = menus
+                .Sum(m => m.Price * order.MenuIds[m.Id]);
+
+            er.FullPrice = fPrice; 
             er.OrderStatus = (OrderStatusEnum)order.OrderStatus;
 
             var existingMenuOrders = er.OrdersMenu.ToList();
@@ -153,6 +161,7 @@ namespace INFRASTRUCTURE.Repositories
             await _dbContext.SaveChangesAsync();
             return order;
         }
+
 
 
     }
