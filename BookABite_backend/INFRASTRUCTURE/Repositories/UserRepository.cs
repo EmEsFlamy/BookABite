@@ -124,6 +124,20 @@ namespace INFRASTRUCTURE.Repositories
 
         }
 
-        
+        public async Task<string> GenerateRandomPasswordAsync()
+        {
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*";
+            Random random = new Random();
+            char[] password = new char[12]; 
+
+            for (int i = 0; i < password.Length; i++)
+            {
+                password[i] = validChars[random.Next(validChars.Length)];
+            }
+
+            return new string(password);
+        }
+
+
     }
 }

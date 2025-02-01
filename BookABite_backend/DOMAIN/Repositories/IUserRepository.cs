@@ -12,5 +12,6 @@ namespace DOMAIN.Repositories
         Task<List<User>> GetAsync();
         Task<User> GetByEmailAsync(string email);
         Task<bool> ChangePasswordAsync(UserPasswordUpdate userPasswordUpdate);
+        Task<string> GenerateRandomPasswordAsync();
     }
 }

@@ -131,4 +131,18 @@ public class UserController(IUserService userService, IJwtTokenGenerator jwtToke
         }
         return Ok(result);
     }
+
+    [HttpPost("generate-and-change-password")]
+    public async Task<IActionResult> GeneratePasswordAsync(int userId)
+    {
+        try
+        {
+            var newPassword = await _userService.GeneratePasswordAsync(userId);
+            return Ok(newPassword); 
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
