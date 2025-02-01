@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {jwtDecode} from 'jwt-decode';
+import { tap } from 'rxjs';
 
 interface LoginResponse {
   token: string;
@@ -12,19 +14,21 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login( credentials: { username: string, password: string } ) {
+  login(credentials: { username: string; password: string }) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<LoginResponse>(`${this.apiUrl}/User/login`, credentials);
+    return this.http.post<LoginResponse>(`${this.apiUrl}/User/login`, credentials).pipe(
+      tap((response: LoginResponse) => {
+        // Store the token in sessionStorage
+        sessionStorage.setItem('token', response.token);
+
+        const decodedToken: any = jwtDecode(response.token);
+        sessionStorage.setItem('userId', decodedToken.sub);
+        sessionStorage.setItem('userType', response.userType);
+      })
+    );
   }
 
-   getDashboardData() {
-    const token = sessionStorage.getItem('auth_token');
-
-    if (token) {
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.get(`${this.apiUrl}/Table/all`, { headers });
-    } else {
-      throw new Error('No token found. Please log in.');
-    }
+  logout(): void {
+    sessionStorage.clear();
   }
 }

@@ -1,0 +1,66 @@
+<div>
+    <form [formGroup]="validateForm" (ngSubmit)="createUser()">
+      <div nz-row nzJustify="center">
+        <div nz-col [nzSpan]="8">
+          <nz-form-item>
+            <nz-form-label [nzFor]="'name'">Name</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="name" id="name" />
+              <nz-form-item *ngIf="validateForm.get('name')?.dirty && validateForm.get('name')?.errors">
+                Please input a name!
+              </nz-form-item>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzFor]="'surname'">Surname</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="surname" id="surname" />
+              <nz-form-item *ngIf="validateForm.get('surname')?.dirty && validateForm.get('surname')?.errors">
+                Please input a surname!
+              </nz-form-item>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzFor]="'username'">Username</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="username" id="username" />
+              <nz-form-item *ngIf="validateForm.get('username')?.dirty && validateForm.get('username')?.errors">
+                Please input a username!
+              </nz-form-item>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzFor]="'password'">Password</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="password" id="password" type="password" />
+              <nz-form-item *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.errors">
+                Please input a password!
+              </nz-form-item>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzFor]="'userType'">User Type</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="userType" id="userType">
+                <nz-option *ngFor="let type of userTypes" [nzValue]="type.value" [nzLabel]="type.label"></nz-option>
+              </nz-select>
+              <nz-form-item *ngIf="validateForm.get('userType')?.dirty && validateForm.get('userType')?.errors">
+                Please select a user type!
+              </nz-form-item>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-control>
+              <button nz-button nzType="primary" [disabled]="!validateForm.valid">Create</button>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </div>
+  

@@ -42,6 +42,7 @@ import {
     FacebookFill
   } from '@ant-design/icons-angular/icons';
 import { IconDefinition } from '@ant-design/icons-angular';
+import {NzSelectModule} from 'ng-zorro-antd/select';
 
 const importedModules = [
     NzAlertModule,
@@ -69,6 +70,7 @@ const importedModules = [
     NzRadioModule,
     NzSpaceModule,
     NzSpinModule,
+    NzSelectModule,
     NzTableModule,
     NzTabsModule,
     NzTagModule,

@@ -13,8 +13,7 @@ export class ReservationsListComponent {
   userRole = '';
   paginatedReservations: any[] = [];
   currentPage: number = 1;
-  pageSize: number = 3;
-  totalPages = Math.ceil(this.reservations.length / this.pageSize);
+  pageSize: number = 8;
 
   constructor(private reservationService: ReservationService){}
 
@@ -31,9 +30,6 @@ fetchReservations(): void {
       this.reservations = data;
       this.filterAndSortReservations();
       this.updatePaginatedReservations();
-      console.log('Fetched and filtered reservations:', this.reservations);
-      console.log('Total reservations:', this.reservations.length);
-      this.logPaginationData();
     },
     (error) => {
       console.error('Error fetching reservations:', error);
@@ -41,24 +37,10 @@ fetchReservations(): void {
   );
 }
 
-logPaginationData() {
-  const totalPages = Math.ceil(this.reservations.length / this.pageSize);
-  console.log('Total Pages:', totalPages);
-  console.log('Current Page:', this.currentPage);
-  console.log('Page Size:', this.pageSize);
-}
-
-updatePaginatedReservations() {
-  this.totalPages = Math.ceil(this.reservations.length / this.pageSize);
-
-  if (this.currentPage > this.totalPages) {
-    this.currentPage = this.totalPages;
-  }
-
+updatePaginatedReservations(): void {
   const startIndex = (this.currentPage - 1) * this.pageSize;
   const endIndex = startIndex + this.pageSize;
   this.paginatedReservations = this.reservations.slice(startIndex, endIndex);
-  console.log('Paginated Reservations:', this.paginatedReservations);
 }
 
   onPageChange(page: number) {
@@ -79,18 +61,26 @@ getReservationStatus(reservation: any): string {
 filterAndSortReservations(): void {
   this.reservations = this.reservations
     .sort((a, b) => {
-      //prioritize active reservations
+      // Prioritize active reservations first
       if (a.isActive && !b.isActive) return -1;
       if (!a.isActive && b.isActive) return 1;
 
-      //prioritize completed over pending (both inactive)
+      // Prioritize completed over pending (both inactive)
       if (a.isCompleted && !b.isCompleted) return 1;
       if (!a.isCompleted && b.isCompleted) return -1;
 
-      //sort by reservationStart (earliest first)
-      return new Date(a.reservationStart).getTime() - new Date(b.reservationStart).getTime();
+      // Sort by the most recent reservation start time (most recent on top)
+      const dateA = new Date(a.reservationStart);
+      const dateB = new Date(b.reservationStart);
+
+      // Sort by the actual date, time and the day of the week
+      if (dateA.getTime() > dateB.getTime()) return -1; // Most recent first
+      if (dateA.getTime() < dateB.getTime()) return 1;  // Least recent first
+
+      return 0;
     });
 }
+
 
   
 }

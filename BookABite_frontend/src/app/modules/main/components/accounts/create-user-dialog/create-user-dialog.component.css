@@ -1,0 +1,45 @@
+::ng-deep .ant-modal-body {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .nz-modal-footer {
+    text-align: center;
+  }
+  
+  form {
+    margin-top: 20px;
+  }
+  
+  form {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  form nz-form-item {
+    margin-bottom: 16px;
+  }
+  
+  nz-form-label {
+    font-weight: bold;
+  }
+  
+  nz-form-control {
+    width: 100%;
+  }
+  
+  nz-select {
+    width: 100%;
+  }
+  
+  button[nz-button] {
+    width: 100%;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  

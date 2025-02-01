@@ -3,9 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface MenuItem {
+  id: number;
   foodName: string;
   price: string;
   foodType: number;
+  quantity: number;
 }
 
 @Injectable({

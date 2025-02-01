@@ -11,6 +11,7 @@ import { MainModule } from './modules/main/main.module';
 import { HttpClientModule } from '@angular/common/http';
 import { registerCustomIcons } from './modules/shared/IconService';
 import { NzIconService } from 'ng-zorro-antd/icon';
+import {NZ_I18N, en_US} from 'ng-zorro-antd/i18n';
 
 registerLocaleData(pl);
 
@@ -27,7 +28,9 @@ registerLocaleData(pl);
         MainModule,
         SharedModule
     ],
-    providers: [],
+    providers: [
+        { provide: NZ_I18N, useValue: en_US }
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {

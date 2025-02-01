@@ -28,13 +28,14 @@ export class NavbarComponent {
   onWindowScroll() {
     const offset = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
 
-    /*console.log('Scroll Offset:', offset);*/
+    //console.log('Scroll Offset:', offset);
 
     if (offset > 50) {
       this.isScrolled = true;
     } else {
       this.isScrolled = false;
     }
+    //console.log('isScrolled:', this.isScrolled);
   }
 }
 

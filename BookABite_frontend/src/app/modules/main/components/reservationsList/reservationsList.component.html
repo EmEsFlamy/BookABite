@@ -1,8 +1,8 @@
-<div class="reservations-wrapper" *ngIf="userRole === 'Waiter'">
+<div class="reservations-wrapper" *ngIf="userRole === 'Waiter' || 'Admin'">
   <h2>Reservations List</h2>
   <nz-table
   [nzBordered]="true"
-  [nzData]="paginatedReservations"
+  [nzData]="reservations"
   [nzSize]="'middle'"
   [nzPageSize]="pageSize"
   [nzPageIndex]="currentPage"
@@ -16,7 +16,8 @@
         <th nzWidth="20%">Client Name</th>
         <th nzWidth="20%">Client Phone</th>
         <th nzWidth="20%">Table ID</th>
-        <th nzWidth="20%">Reservation Time</th>
+        <th nzWidth="7%">Reservation Day</th>
+        <th nzWidth="13%">Reservation Time</th>
         <th nzWidth="10%">Status</th>
       </tr>
     </thead>
@@ -26,6 +27,7 @@
         <td>{{ reservation.clientName }} {{ reservation.clientSurname }}</td>
         <td>{{ reservation.clientPhoneNumber }}</td>
         <td>{{ reservation.tableId }}</td>
+        <td>{{ reservation.reservationStart | date: 'dd-MM-yyyy' }}</td>
         <td>
           {{ reservation.reservationStart | date: 'shortTime' }} -
           {{ reservation.reservationEnd | date: 'shortTime' }}

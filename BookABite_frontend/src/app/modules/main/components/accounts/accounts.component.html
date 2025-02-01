@@ -1,0 +1,42 @@
+<div class="main">
+      <div class="accounts-container">
+          <div class="actions">
+            <input
+              nz-input
+              placeholder="Search user..."
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="onSearch()"
+              style="width: 300px; margin-right: 20px;"
+            />
+            <button nz-button nzType="primary" (click)="openCreateUserModal()">+</button>
+          </div>
+        
+          <nz-table #basicTable [nzData]="filteredUsers" [nzBordered]="true" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th nzWidth="25%">Name</th>
+                <th nzWidth="25%">Surname</th>
+                <th nzWidth="25%">Username</th>
+                <th nzWidth="15%">User Type</th>
+                <th nzWidth="10%">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of filteredUsers">
+                <td>{{ user.name }}</td>
+                <td>{{ user.surname }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.userType === 0 ? 'Admin' : 'User' }}</td>
+                <td>
+                  <button nz-button nzType="default" (click)="openEditUserModal(user)">
+                    Edit
+                  </button>
+                  <button nz-button nzDanger (click)="deleteUser(user.id)">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+</div>

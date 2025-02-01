@@ -11,16 +11,10 @@ export interface BaseTable {
  export interface Order {
     id: number;
     fullPrice: number;
-    timeStart: string;
-    timeEnd: string;
     orderStatus: number; 
-    customerName?: string;
-    specialInstructions?: string;
-    items: Array<{
-      name: string;
-      quantity: number;
-      price: number;
-    }>;
+    userId: number;
+    tableId: number;
+    menuIds: number[];
   }
 
   export interface ReservationPayload {
@@ -47,6 +41,8 @@ export interface BaseTable {
 export class ReservationService {
   private apiTableUrl = 'http://localhost:8080/api/Table';
   private apiReservationUrl = 'http://localhost:8080/api/Reservation';
+  private apiOrderUrl = 'http://localhost:8080/api/Order';
+  private currentOrderMap: { [key: number]: Order } = {};
 
   constructor(private http: HttpClient) {}
 
@@ -78,4 +74,52 @@ export class ReservationService {
   getReservationsAll(): Observable<any> {
     return this.http.get(`${this.apiReservationUrl}/all`, { headers: this.getHeaders() });
   }
+
+  getOrdersAll(): Observable<any> {
+    return this.http.get(`${this.apiOrderUrl}/all`, { headers: this.getHeaders() });
+  }
+
+  assignOrder(tableId: number, menuIds: { [key: number]: number }): Observable<any> {
+    const userId = Number(sessionStorage.getItem('userId'));
+
+    const payload = {
+        id: 0,
+        fullPrice: 0,
+        orderStatus: 0,
+        tableId: tableId,
+        userId: userId,
+        menuIds: menuIds
+    };
+
+    return this.http.post(`${this.apiOrderUrl}`, payload, { headers: this.getHeaders() });
+}
+
+createOrder(tableId: number, menuIds: { [key: number]: number }): Observable<Order> {
+  const userId = Number(sessionStorage.getItem('userId'));
+  const payload = {
+    id: 0,
+    fullPrice: 0,
+    orderStatus: 0,
+    tableId: tableId,
+    userId: userId,
+    menuIds: menuIds
+  };
+
+  return this.http.post<Order>(`${this.apiOrderUrl}`, payload, { headers: this.getHeaders() });
+}
+
+updateOrder(updatedData: Partial<Order>): Observable<Order> {
+  return this.http.put<Order>(`${this.apiOrderUrl}`, updatedData, {
+    headers: this.getHeaders(),
+  });
+}
+
+setCurrentOrder(tableId: number, order: Order): void {
+  this.currentOrderMap[tableId] = order;
+}
+
+getCurrentOrder(tableId: number): Order | null {
+  return this.currentOrderMap[tableId] || null;
+}
+
 }

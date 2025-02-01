@@ -11,10 +11,25 @@ import { ContactComponent } from './components/contact/contact.component';
 import { SafeUrlPipe } from '../../safe-url.pipe';
 import { ReservationComponent } from './components/reservation/reservation.component';
 import { ReservationsListComponent } from './components/reservationsList/reservationsList.component';
+import { AccountsComponent } from './components/accounts/accounts.component';
+import { EditUserDialogComponent } from './components/accounts/edit-user-dialog/edit-user-dialog.component';
+import { CreateUserDialogComponent } from './components/accounts/create-user-dialog/create-user-dialog.component';
 
 
 @NgModule({
-    declarations: [MainComponent, HomeComponent, MenuComponent, LoginComponent, AboutComponent, ContactComponent, SafeUrlPipe, ReservationComponent, ReservationsListComponent],
+    declarations: [
+        MainComponent, 
+        HomeComponent, 
+        MenuComponent, 
+        LoginComponent, 
+        AboutComponent, 
+        ContactComponent, 
+        SafeUrlPipe, 
+        ReservationComponent, 
+        ReservationsListComponent, 
+        AccountsComponent, 
+        EditUserDialogComponent, 
+        CreateUserDialogComponent],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],

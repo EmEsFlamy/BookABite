@@ -1,5 +1,13 @@
 <div class="reservation-wrapper">
-  <h2>{{ userRole === 'Guest' ? 'Table Reservation' : 'Waiter Management System' }}</h2>
+  <h2>
+    {{
+      userRole === 'Guest' ? 'Table Reservation' :
+      userRole === 'Waiter' ? 'Waiter Management System' :
+      userRole === 'Admin' ? 'Admin Management System' :
+      'Management System'
+    }}
+  </h2>
+  
 
   <!-- Guest View -->
   <ng-container *ngIf="userRole === 'Guest'">
@@ -116,7 +124,7 @@
   </ng-container>
 
   <!-- Waiter View -->
-  <ng-container *ngIf="userRole === 'Waiter'">
+  <ng-container *ngIf="userRole === 'Waiter' || userRole === 'Admin'">
     <div class="reservation-container">
       <div *ngFor="let table of tables" class="table-box">
         <button
@@ -145,103 +153,135 @@
           <p><strong>Seats:</strong> {{ selectedTable.seats }}</p>
           <p><strong>Status:</strong> {{ getStatusLabel() }}</p>
           <p>
-            <strong>Current Order:</strong>
-            {{ selectedTable.order ? 'Order Assigned' : 'No orders assigned' }}
+            <strong>Current Order: </strong>
+            <span *ngIf="currentOrder[selectedTable.id]; else noOrder">
+              Order ID: {{ currentOrder[selectedTable.id]?.id }} | Full Price: {{ currentOrder[selectedTable.id]?.fullPrice }}
+            </span>
+            <ng-template #noOrder>No orders assigned</ng-template>
           </p>
 
           <!-- Update Table Status -->
           <h3>Update Table Status</h3>
-          <div class="status-buttons">
-            <button
-              *ngFor="let status of tableStatusMap | keyvalue"
-              nz-button
-              [nzType]="status.value === selectedTable.tableStatus ? 'primary' : 'default'"
-              (click)="updateTableStatus(status.key)"
-            >
-              {{ status.key }}
-            </button>
-          </div>
+            <!-- Waiter buttons-->
+            <div class="status-buttons" *ngIf="userRole === 'Waiter'">
+              <button
+                *ngFor="let status of waiterStatusMap | keyvalue"
+                nz-button
+                [nzType]="status.value === selectedTable.tableStatus ? 'primary' : 'default'"
+                (click)="updateTableStatus(status.key)"
+              >
+                {{ status.key }}
+              </button>
+            </div>
+
+            <!-- Admin buttons-->
+            <div class="status-buttons" *ngIf="userRole === 'Admin'">
+              <button
+                *ngFor="let status of adminStatusMap | keyvalue"
+                nz-button
+                [nzType]="status.value === selectedTable.tableStatus ? 'primary' : 'default'"
+                (click)="updateTableStatus(status.key)"
+              >
+                {{ status.key }}
+              </button>
+            </div>
 
           <!-- Order Management -->
-          <h3>Order Management</h3>
-          <div class="button-group">
+          <h3 *ngIf="userRole === 'Waiter'">Order Management</h3>
+          <div class="button-group" *ngIf="userRole === 'Waiter'">
+            <!-- Start New Order Button -->
             <button
               nz-button
               nzType="primary"
-              (click)="openAssignOrderModal()"
-              class="assign-order-button"
+              (click)="startNewOrder()"
+              class="start-order-button"
+              [disabled]="selectedTable.orderStatus === 0"
             >
-              Assign Order
+              {{ orderButtonText[selectedTable?.id] }}
             </button>
+
+            <!-- Assign New Items Button -->
             <button
               nz-button
               nzType="default"
-              [disabled]="!selectedTable.order"
+              (click)="assignNewItems()"
+              class="assign-items-button"
+              [disabled]="selectedTable?.tableStatus !== 2 || !selectedTable?.order"
+            >
+              Assign New Items
+            </button>
+
+            <!-- View Order Button -->
+            <button
+              nz-button
+              nzType="default"
               (click)="viewOrderDetails()"
               class="view-order-button"
+              [disabled]="!selectedTable?.order"
             >
               View Order
             </button>
           </div>
+
         </div>
       </ng-container>
     </nz-modal>
 
     <!-- Assign Order Modal -->
     <nz-modal
-      [(nzVisible)]="isAssignOrderModalVisible"
-      nzTitle="Assign Order"
-      (nzOnCancel)="closeAssignOrderModal()"
-      [nzFooter]="null"
-      class="assign-order-modal"
-    >
-      <ng-container *nzModalContent>
-        <div class="menu">
-          <div class="category-icons">
-            <div
-              *ngFor="let category of categories"
-              class="icon"
-              (click)="onCategoryChange(category)"
-            >
-              <span nz-icon [nzType]="category.icon" nzTheme="outline"></span>
-            </div>
-          </div>
-
-          <h2 class="category-name">{{ selectedCategory.name }}</h2>
-
-          <div class="menu-content">
-            <nz-table [nzData]="allItems" [nzBordered]="true" [nzSize]="'small'" [nzShowPagination]="false">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of allItems">
-                  <td>{{ item.foodName }}</td>
-                  <td>${{ item.price }}</td>
-                  <td>
-                    <!--<input
-                      nz-input
-                      type="number"
-                      min="0"
-                      [(ngModel)]="item.quantity"
-                      class="quantity-input"
-                    />-->
-                  </td>
-                </tr>
-              </tbody>
-            </nz-table>
-          </div>
-
-          <div class="modal-footer">
-            <button nz-button nzType="default" (click)="closeAssignOrderModal()">Cancel</button>
-            <button nz-button nzType="primary" (click)="confirmAssignOrder()">Confirm</button>
+    [(nzVisible)]="isAssignOrderModalVisible"
+    nzTitle="Assign Order"
+    (nzOnCancel)="closeAssignOrderModal()"
+    [nzFooter]="null"
+    class="assign-order-modal"
+    [nzStyle]="{ 'height': '520px', 'max-height': '90%' }"
+  >
+    <ng-container *nzModalContent>
+      <div class="menu">
+        <div class="category-icons">
+          <div *ngFor="let category of categories" class="icon" (click)="onCategoryChange(category)">
+            <span nz-icon [nzType]="category.icon" nzTheme="outline"></span>
           </div>
         </div>
-      </ng-container>
-    </nz-modal>
+  
+        <h2 class="category-name">{{ selectedCategory.name }}</h2>
+  
+        <div class="menu-content">
+          <nz-table [nzData]="allItems" [nzBordered]="true" [nzSize]="'small'" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of allItems">
+                <td>{{ item.foodName }}</td>
+                <td>${{ item.price }}</td>
+                <td>
+                  <button nz-button nzType="default" (click)="decreaseQuantity(item)">-</button>
+                  {{ item.quantity }}
+                  <button nz-button nzType="default" (click)="increaseQuantity(item)">+</button>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+  
+        <div class="modal-footer">
+          <button nz-button nzType="default" (click)="closeAssignOrderModal()">Cancel</button>
+          <button
+            nz-button
+            nzType="primary"
+            [disabled]="!selectedMenuItems.length"
+            (click)="confirmAssignOrder()"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </nz-modal>
   </ng-container>
 </div>
