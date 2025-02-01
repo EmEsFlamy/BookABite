@@ -99,6 +99,7 @@ namespace INFRASTRUCTURE.Repositories
             er.Name = user.Name;
             er.Surname = user.Surname;
             er.Username = user.Username;
+            er.UserType = (UserTypeEnum)user.UserType;
             
 
             await _dbContext.SaveChangesAsync();
