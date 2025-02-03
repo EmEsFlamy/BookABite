@@ -154,11 +154,12 @@
           <p><strong>Status:</strong> {{ getStatusLabel() }}</p>
           <p>
             <strong>Current Order: </strong>
-            <span *ngIf="currentOrder[selectedTable.id]; else noOrder">
-              Order ID: {{ currentOrder[selectedTable.id]?.id }} | Full Price: {{ currentOrder[selectedTable.id]?.fullPrice }}
+            <span *ngIf="selectedTable?.order; else noOrder">
+              Order ID: {{ selectedTable?.order?.id }} | Full Price: {{ selectedTable?.order?.fullPrice }}
             </span>
-            <ng-template #noOrder>No orders assigned</ng-template>
-          </p>
+            <ng-template #noOrder>
+              No active order for this table.
+            </ng-template>
 
           <!-- Update Table Status -->
           <h3>Update Table Status</h3>
@@ -190,32 +191,25 @@
           <h3 *ngIf="userRole === 'Waiter'">Order Management</h3>
           <div class="button-group" *ngIf="userRole === 'Waiter'">
             <!-- Start New Order Button -->
-            <button
-              nz-button
-              nzType="primary"
-              (click)="startNewOrder()"
-              class="start-order-button"
-              [disabled]="selectedTable.orderStatus === 0"
-            >
-              {{ orderButtonText[selectedTable?.id] }}
+            <button nz-button 
+              [nzType]="selectedTable?.order !== null ? 'dashed' : 'default'"  
+              [disabled]="selectedTable?.order !== null" 
+              (click)="startNewOrder()">Start New Order
             </button>
 
             <!-- Assign New Items Button -->
-            <button
-              nz-button
-              nzType="default"
-              (click)="assignNewItems()"
-              class="assign-items-button"
-              [disabled]="selectedTable?.tableStatus !== 2 || !selectedTable?.order"
-            >
-              Assign New Items
+            <button nz-button 
+              [nzType]="!selectedTable?.order ? 'dashed' : 'default'"  
+              [disabled]="!selectedTable?.order" 
+              (click)="assignNewItems()">Assign New Items
             </button>
 
             <!-- View Order Button -->
+            
             <button
               nz-button
-              nzType="default"
-              (click)="viewOrderDetails()"
+              [nzType]="!selectedTable?.order ? 'dashed' : 'default'"
+              (click)="openModal()"
               class="view-order-button"
               [disabled]="!selectedTable?.order"
             >
@@ -244,7 +238,7 @@
           </div>
         </div>
   
-        <h2 class="category-name">{{ selectedCategory.name }}</h2>
+        <h3 class="category-name">{{ selectedCategory.name }}</h3>
   
         <div class="menu-content">
           <nz-table [nzData]="allItems" [nzBordered]="true" [nzSize]="'small'" [nzShowPagination]="false">
@@ -261,7 +255,7 @@
                 <td>${{ item.price }}</td>
                 <td>
                   <button nz-button nzType="default" (click)="decreaseQuantity(item)">-</button>
-                  {{ item.quantity }}
+                  {{ item.quantity || 0}}
                   <button nz-button nzType="default" (click)="increaseQuantity(item)">+</button>
                 </td>
               </tr>
@@ -270,12 +264,12 @@
         </div>
   
         <div class="modal-footer">
-          <button nz-button nzType="default" (click)="closeAssignOrderModal()">Cancel</button>
+          <button nz-button nzType="primary" (click)="closeAssignOrderModal()">Cancel</button>
           <button
             nz-button
-            nzType="primary"
+            nzType="default"
             [disabled]="!selectedMenuItems.length"
-            (click)="confirmAssignOrder()"
+            (click)="onConfirmAddItem()"
           >
             Confirm
           </button>

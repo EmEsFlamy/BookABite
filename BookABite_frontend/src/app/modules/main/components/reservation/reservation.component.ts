@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { NzButtonType } from 'ng-zorro-antd/button';
 import { BaseTable, GuestTable, WaiterTable, ReservationService, Order, ReservationPayload } from '../../../../../services/reservation.service';
 import { MenuService, MenuItem } from '../../../../../services/menu.service';
 import { MenuHelperService } from '../../../../../services/menu-helper.service';
+import { Observable } from 'rxjs';
+import { ViewOrderComponent } from './view-order/view-order.component';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 interface Category {
   name: string;
@@ -40,7 +43,6 @@ export class ReservationComponent {
   intervalId: any;
   selectedMenuItems: MenuItem[] = [];
   currentOrder: { [key: number]: Order | null } = {};
-  orderButtonText: { [key: number]: string } = {};
   
 
   reverseTableStatusMap: { [key: number]: string } = {
@@ -62,7 +64,7 @@ export class ReservationComponent {
 
   tableStatusOptions = Object.keys(this.tableStatusMap);
 
-  constructor(private reservationService: ReservationService, private menuService: MenuService, private menuHelper: MenuHelperService) {}
+  constructor(private reservationService: ReservationService, private menuService: MenuService, private menuHelper: MenuHelperService, private cdr: ChangeDetectorRef, private modal: NzModalService) {}
 
   ngOnInit(): void {
     const userType = sessionStorage.getItem('userType');
@@ -104,10 +106,16 @@ export class ReservationComponent {
   }
 
   fetchTables(): void {
-    this.reservationService.getTables().subscribe((data: any[]) => {
-      this.tables = data;
-      console.log('fetch tabless',this.orderButtonText);
-      this.checkActiveOrdersForTables();
+    this.reservationService.getTables().subscribe((tables: GuestTable[]) => {
+      this.tables = tables;
+      
+      if(this.userRole !== 'Guest') {
+      this.reservationService.getOrdersAll().subscribe((orders: Order[]) => {
+        this.tables.forEach((table) => {
+          const order = orders.find(order => order.tableId === table.id && order.orderStatus === 0);
+          table.order = order || null;
+        });
+      });}
     });
   }
 
@@ -115,29 +123,12 @@ export class ReservationComponent {
     this.reservationService.getReservations().subscribe(
       (data) => {
         this.reservations = data;
-        console.log('Fetched reservations:', this.reservations);
+        //console.log('Fetched reservations:', this.reservations);
       },
       (error) => {
         console.error('Error fetching reservations:', error);
       }
     );
-  }
-
-  checkActiveOrdersForTables(): void {
-    this.reservationService.getOrdersAll().subscribe(orders => {
-      orders.filter((order: { orderStatus: number; }) => order.orderStatus === 0).forEach((order: Order | null) => {
-        if (!order) return;
-        const tableId = order.tableId;
-        this.currentOrder[tableId] = order;
-        this.orderButtonText[tableId] = "Assign New Items";
-      });
-
-      this.tables.forEach(table => {
-        if (!this.currentOrder[table.id]) {
-          this.orderButtonText[table.id] = "Start New Order";
-        }
-      });
-    });
   }
 
   getStatusLabel(): string {
@@ -158,9 +149,7 @@ export class ReservationComponent {
       this.selectedSlots = [];
     }
 
-    console.log('Selected Table:', this.selectedTable);
-    console.log('Current order:', this.currentOrder[this.selectedTable.id]);
-    console.log('selectedtableorderstatus,',this.selectedTable.orderStatus);
+    //console.log("Selected Table:", this.selectedTable);
   }
 
   // Navigation between modal steps
@@ -312,9 +301,28 @@ confirmReservation(): void {
     );
   }
 
-  openAssignOrderModal(): void {
-    this.isAssignOrderModalVisible = true;
+  openModal(): void {
+    const modalRef = this.modal.create({
+      nzTitle: 'View Order',
+      nzContent: ViewOrderComponent,
+      nzOnOk: (instance) => instance.finishOrder(),
+      nzFooter: null,
+    });
+    console.log("Data:", this.selectedTable.order);
+    if(modalRef.componentInstance instanceof ViewOrderComponent) {
+    modalRef.componentInstance.order = this.selectedTable.order;
+    }
+    modalRef.afterClose.subscribe(result => {
+      console.log('Modal closed', result);
+      if (result) {
+        this.updateTableStatus("Available");
+        this.fetchTables();
+        this.fetchReservations();
+        this.modal.closeAll();
+      }
+    });
   }
+  
 
   closeAssignOrderModal(): void {
     this.isAssignOrderModalVisible = false;
@@ -322,13 +330,13 @@ confirmReservation(): void {
 
   assignNewItems(): void {
     if (this.selectedTable) {
-      const currentOrder = this.reservationService.getCurrentOrder(this.selectedTable.id);
-  
-      if (currentOrder) {
-        this.isAssignOrderModalVisible = true;
-      } else {
-        alert("No order found for this table.");
-      }
+      this.reservationService.getCurrentOrder(this.selectedTable.id).subscribe(order => {
+        if (order) {
+          this.isAssignOrderModalVisible = true;
+        } else {
+          alert("No order found for this table.");
+        }
+      });
     }
   }
 
@@ -343,6 +351,11 @@ confirmReservation(): void {
       this.updateSelectedMenuItems(item);
     }
   }
+
+  resetAllQuantity(): void {
+    this.allItems.forEach(item => item.quantity = 0);
+    console.log('Items', this.selectedMenuItems)
+  }
   
   updateSelectedMenuItems(item: MenuItem): void {
     const existingItem = this.selectedMenuItems.find(menuItem => menuItem.id === item.id);
@@ -353,52 +366,71 @@ confirmReservation(): void {
     }
   }
 
+  getCurrentOrder(tableId: number): Observable<Order | null> {
+    return this.reservationService.getCurrentOrder(tableId);
+  }
+
   startNewOrder(): void {
     if (!this.selectedTable) return;
   
-    const newStatus = "Occupied";
-    this.updateTableStatus(newStatus);
+    this.updateTableStatus("Occupied");
   
     const menuIds = {};
-    this.reservationService.createOrder(this.selectedTable.id, menuIds).subscribe(response => {
-      this.reservationService.setCurrentOrder(this.selectedTable.id, response);
-  
-      this.selectedTable.order = response;
+    this.reservationService.assignOrder(this.selectedTable.id, menuIds).subscribe(response => {
       console.log('New order created:', response);
   
-      this.orderButtonText[this.selectedTable.id] = "Assign New Items"; 
+      this.reservationService.getCurrentOrder(this.selectedTable.id).subscribe(order => {
+        this.selectedTable.order = order;
+        this.fetchTables();
+      });
     });
+  }
+
+  async updateOrderAndRefresh(item: MenuItem): Promise<void> {
+    if (!this.selectedTable || !this.selectedTable.order) return;
   
-    console.log('Current order:', this.currentOrder[this.selectedTable.id]);
-    console.log('table order status',this.selectedTable.order.orderStatus);
-  }
-
-
-addItemToOrder(item: MenuItem): void {
-  if (!this.selectedTable || !this.currentOrder[this.selectedTable.id]) return;
-
-  const order = this.currentOrder[this.selectedTable.id];
-  if (!order) return;
-
-  const menuIds = { ...order.menuIds };
-
-  if (menuIds[item.id]) {
-      menuIds[item.id]++;
-  } else {
-      menuIds[item.id] = 1;
-  }
-
-  const updatedData = {
+    const order = this.selectedTable.order;
+    const menuIds = { ...order.menuIds };
+  
+    // Update menu items
+    menuIds[item.id] = (menuIds[item.id] || 0) + item.quantity;
+  
+    const updatedData = {
       id: order.id,
       menuIds: menuIds,
-      fullPrice: 0,
+      tableId: order.tableId,
+      userId: order.userId,
       orderStatus: order.orderStatus,
-  };
-
-  this.reservationService.updateOrder(updatedData).subscribe(updatedOrder => {
-      this.currentOrder[this.selectedTable.id] = updatedOrder;
-  });
-}
+    };
+  
+    console.log('Adding item to order:', updatedData);
+  
+    try {
+      // Update order data
+      const updatedOrder = await this.reservationService.updateOrder(updatedData).toPromise();
+      this.selectedTable!.order = updatedOrder;
+      // Refresh the order immediately after update
+      
+  
+    } catch (error) {
+      console.error('Error updating order:', error);
+    }
+      await this.refreshOrder(updatedData.id);
+  }
+  
+  async refreshOrder(orderId: number): Promise<void> {
+    if (!this.selectedTable) return;
+  
+    try {
+      const refreshedOrder = await this.reservationService.getOrderById(orderId).toPromise();
+      
+      this.selectedTable!.order = refreshedOrder;
+      console.log('Order refreshed:', refreshedOrder);
+    } catch (error) {
+      console.error('Error refreshing order:', error);
+    }
+  }
+  
 
   viewOrderDetails(): void {
     if (!this.selectedTable || !this.currentOrder[this.selectedTable.id]) return;
@@ -407,60 +439,34 @@ addItemToOrder(item: MenuItem): void {
   }
 
   endOrder(): void {
-    if (!this.selectedTable || !this.currentOrder[this.selectedTable.id]) return;
-
-    const order = this.currentOrder[this.selectedTable.id];
-    if (!order) return;
-
+    if (!this.selectedTable || !this.selectedTable.order) return;
+  
+    const order = this.selectedTable.order;
     const updatedData = {
-        id: order.id,
-        orderStatus: 1, // 1: Completed
+      id: order.id,
+      orderStatus: 1, // Completed
     };
-
+  
     this.reservationService.updateOrder(updatedData).subscribe(() => {
-        this.selectedTable.order = null;
-        this.currentOrder[this.selectedTable.id] = null;
-        this.orderButtonText[this.selectedTable.id] = "Start New Order";
+      this.selectedTable!.order = null;
+      this.fetchTables();
     });
-}
+  }
 
-
-  confirmAssignOrder(): void {
-    if (this.selectedTable && this.selectedMenuItems.length > 0) {
-        const menuIds = this.selectedMenuItems.reduce((acc, item) => {
-            acc[item.id] = item.quantity;
-            return acc;
-        }, {} as { [key: number]: number });
-
-        const orderPayload = {
-            id: 0,
-            fullPrice: 0,
-            orderStatus: 0,
-            tableId: this.selectedTable.id,
-            userId: Number(sessionStorage.getItem('userId')),
-            menuIds: menuIds
-        };
-
-        console.log(`Assigning order to Table ${this.selectedTable.id}:`, orderPayload);
-
-        this.reservationService.assignOrder(orderPayload.tableId, orderPayload.menuIds)
-            .subscribe(
-                (response) => {
-                    console.log('Order successfully assigned:', response);
-                    this.fetchTables();
-                },
-                (error) => {
-                    console.error('Failed to assign order:', error);
-                }
-            );
-
-        this.newOrder = '';
-        this.closeAssignOrderModal();
+  onConfirmAddItem(): void {
+    if (this.selectedMenuItems.length > 0) {
+      this.selectedMenuItems.forEach(item => {
+        this.updateOrderAndRefresh(item);
+        console.log('Item added:', item);
+        item.quantity = 0; 
+      });
+      this.resetAllQuantity();
+      this.selectedMenuItems = []; 
+      this.closeAssignOrderModal(); 
     } else {
-        alert('Please select a table and at least one menu item!');
+      console.log('No items selected.');
     }
-}
-
+  }
   
 
   onCategoryChange(category: Category): void {

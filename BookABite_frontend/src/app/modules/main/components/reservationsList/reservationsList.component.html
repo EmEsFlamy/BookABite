@@ -29,8 +29,8 @@
         <td>{{ reservation.tableId }}</td>
         <td>{{ reservation.reservationStart | date: 'dd-MM-yyyy' }}</td>
         <td>
-          {{ reservation.reservationStart | date: 'shortTime' }} -
-          {{ reservation.reservationEnd | date: 'shortTime' }}
+          {{ reservation.reservationStart | date:'HH:mm':'UTC' }} - 
+          {{ reservation.reservationEnd | date:'HH:mm':'UTC' }}
         </td>
         <td>
           <span

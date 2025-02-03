@@ -14,6 +14,7 @@ import { ReservationsListComponent } from './components/reservationsList/reserva
 import { AccountsComponent } from './components/accounts/accounts.component';
 import { EditUserDialogComponent } from './components/accounts/edit-user-dialog/edit-user-dialog.component';
 import { CreateUserDialogComponent } from './components/accounts/create-user-dialog/create-user-dialog.component';
+import { ViewOrderComponent } from './components/reservation/view-order/view-order.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CreateUserDialogComponent } from './components/accounts/create-user-dia
         ReservationsListComponent, 
         AccountsComponent, 
         EditUserDialogComponent, 
-        CreateUserDialogComponent],
+        CreateUserDialogComponent,
+        ViewOrderComponent],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],

@@ -30,6 +30,7 @@ fetchReservations(): void {
       this.reservations = data;
       this.filterAndSortReservations();
       this.updatePaginatedReservations();
+      console.log('Reservations:', this.reservations);
     },
     (error) => {
       console.error('Error fetching reservations:', error);
