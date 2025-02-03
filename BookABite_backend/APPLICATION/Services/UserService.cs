@@ -2,6 +2,7 @@
 using DOMAIN.Repositories;
 using DOMAIN.Services;
 using APPLICATION.Security;
+using System.Text;
 
 namespace APPLICATION.Services;
 
@@ -50,4 +51,29 @@ public class UserService(IUserRepository userRepository) : IUserService
         var result = await _userRepository.ChangePasswordAsync(userPasswordUpdate);
         return result;
     }
+
+    public async Task<string> GeneratePasswordAsync(int userId)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var randomPassword = await _userRepository.GenerateRandomPasswordAsync();
+
+        var userPasswordUpdate = new UserPasswordUpdate(userId, randomPassword);
+        var success = await _userRepository.ChangePasswordAsync(userPasswordUpdate);
+
+        if (!success)
+        {
+            throw new Exception("Failed to update the password.");
+        }
+
+        return randomPassword;
+    }
+
+
+
 }
