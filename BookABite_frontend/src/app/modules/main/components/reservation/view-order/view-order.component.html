@@ -1,6 +1,6 @@
 <p><strong>Order ID:</strong> {{ order?.id }}</p>
 <p><strong>Table:</strong> {{ order?.tableId }}</p>
-<p><strong>Status:</strong> {{ order?.orderStatus }}</p>
+<p><strong>Status:</strong> {{ getOrderStatusLabel() }}</p>
 <p><strong>Items:</strong></p>
 
 <ul *ngIf="items.length > 0; else noItems">

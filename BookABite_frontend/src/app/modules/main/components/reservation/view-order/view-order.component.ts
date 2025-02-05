@@ -12,6 +12,12 @@ export class ViewOrderComponent implements OnInit, OnChanges {
   @Input() order: any;
   menuItems: MenuItem[] = [];
   items: any[] = [];
+  
+  OrderStatusMap: { [key: number]: string } = {
+    0: 'Ongoing',
+    1: 'Finished'
+  };
+
   constructor(private menuService: MenuService, private reservationService: ReservationService, private modalRef: NzModalRef) {}
 
   ngOnInit(): void {
@@ -30,6 +36,11 @@ export class ViewOrderComponent implements OnInit, OnChanges {
       console.log("Order received:", this.order);
       this.processOrderItems();
     }
+  }
+
+  getOrderStatusLabel(): string {
+    if (!this.order) return 'Unknown';
+    return this.OrderStatusMap[this.order.orderStatus] || 'Unknown';
   }
 
   processOrderItems(): void {

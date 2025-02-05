@@ -198,10 +198,15 @@
             </button>
 
             <!-- Assign New Items Button -->
-            <button nz-button 
+
+          
+
+          <button nz-button
               [nzType]="!selectedTable?.order ? 'dashed' : 'default'"  
               [disabled]="!selectedTable?.order" 
-              (click)="assignNewItems()">Assign New Items
+              (click)="openAssignModal()"
+            >
+              Assign new items
             </button>
 
             <!-- View Order Button -->
@@ -220,62 +225,5 @@
         </div>
       </ng-container>
     </nz-modal>
-
-    <!-- Assign Order Modal -->
-    <nz-modal
-    [(nzVisible)]="isAssignOrderModalVisible"
-    nzTitle="Assign Order"
-    (nzOnCancel)="closeAssignOrderModal()"
-    [nzFooter]="null"
-    class="assign-order-modal"
-    [nzStyle]="{ 'height': '520px', 'max-height': '90%' }"
-  >
-    <ng-container *nzModalContent>
-      <div class="menu">
-        <div class="category-icons">
-          <div *ngFor="let category of categories" class="icon" (click)="onCategoryChange(category)">
-            <span nz-icon [nzType]="category.icon" nzTheme="outline"></span>
-          </div>
-        </div>
-  
-        <h3 class="category-name">{{ selectedCategory.name }}</h3>
-  
-        <div class="menu-content">
-          <nz-table [nzData]="allItems" [nzBordered]="true" [nzSize]="'small'" [nzShowPagination]="false">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Price</th>
-                <th>Quantity</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of allItems">
-                <td>{{ item.foodName }}</td>
-                <td>${{ item.price }}</td>
-                <td>
-                  <button nz-button nzType="default" (click)="decreaseQuantity(item)">-</button>
-                  {{ item.quantity || 0}}
-                  <button nz-button nzType="default" (click)="increaseQuantity(item)">+</button>
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
-        </div>
-  
-        <div class="modal-footer">
-          <button nz-button nzType="primary" (click)="closeAssignOrderModal()">Cancel</button>
-          <button
-            nz-button
-            nzType="default"
-            [disabled]="!selectedMenuItems.length"
-            (click)="onConfirmAddItem()"
-          >
-            Confirm
-          </button>
-        </div>
-      </div>
-    </ng-container>
-  </nz-modal>
   </ng-container>
 </div>

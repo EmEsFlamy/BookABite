@@ -15,6 +15,7 @@ import { AccountsComponent } from './components/accounts/accounts.component';
 import { EditUserDialogComponent } from './components/accounts/edit-user-dialog/edit-user-dialog.component';
 import { CreateUserDialogComponent } from './components/accounts/create-user-dialog/create-user-dialog.component';
 import { ViewOrderComponent } from './components/reservation/view-order/view-order.component';
+import { AssignItemsComponent } from './components/reservation/assign-items/assign-items.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { ViewOrderComponent } from './components/reservation/view-order/view-ord
         AccountsComponent, 
         EditUserDialogComponent, 
         CreateUserDialogComponent,
-        ViewOrderComponent],
+        ViewOrderComponent,
+        AssignItemsComponent],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],
