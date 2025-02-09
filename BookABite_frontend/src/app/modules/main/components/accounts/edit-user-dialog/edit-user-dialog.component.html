@@ -1,5 +1,5 @@
 <div>
-    <form [formGroup]="validateForm" (ngSubmit)="updateUser()">
+    <form [formGroup]="validateForm">
       <div nz-row nzJustify="center">
         <div nz-col [nzSpan]="8">
           <nz-form-item>
@@ -56,13 +56,13 @@
 
           <nz-form-item>
             <nz-form-control>
-              <button nz-button nzDanger click="">Password reset</button>
+              <button nz-button nzDanger (click)="resetPassword()">Password reset</button>
             </nz-form-control>
           </nz-form-item>
   
           <nz-form-item>
             <nz-form-control>
-              <button nz-button nzType="primary" [disabled]="!validateForm.valid">Save</button>
+              <button nz-button nzType="primary" (click)="updateUser()" [disabled]="!validateForm.valid">Save</button>
             </nz-form-control>
           </nz-form-item>
         </div>

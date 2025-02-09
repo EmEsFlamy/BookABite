@@ -21,7 +21,7 @@ export class UserService {
   private getHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('token');
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `bearer ${token}`,
     });
   }
 
@@ -55,6 +55,14 @@ export class UserService {
       `${this.apiUserUrl}/changePassword`, 
       payload, 
       { headers: this.getHeaders() }
+    );
+  }
+
+  resetPassword(id: number): Observable<any> {
+    return this.http.post(
+      `${this.apiUserUrl}/generate-and-change-password?userId=${id}`,
+      {},
+      { headers: this.getHeaders(), responseType: 'text' }
     );
   }
 

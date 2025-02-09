@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NzModalRef } from 'ng-zorro-antd/modal';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../../../../../services/user.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-edit-user-dialog',
@@ -20,7 +21,9 @@ export class EditUserDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private modalRef: NzModalRef
+    private modalRef: NzModalRef,
+    private msg: NzMessageService,
+    private modal: NzModalService
   ) {
     this.user = this.modalRef.getConfig().nzData.user;
   }
@@ -43,5 +46,22 @@ export class EditUserDialogComponent implements OnInit {
         this.modalRef.close(true);
       });
     }
+  }
+
+  resetPassword(): void {
+    this.userService.resetPassword(this.user.id).subscribe(
+      (newPassword: string) => {
+        console.log('New password:', newPassword);
+        this.modal.info({
+          nzTitle: 'Password Reset Successful',
+          nzContent: `Your new password is: <strong>${newPassword}</strong>`,
+          nzOnOk: () => console.log('OK Clicked')
+        });
+      },
+      (error) => {
+        console.error('Password reset failed:', error);
+        this.msg.error('Failed to reset password');
+      }
+    );
   }
 }
