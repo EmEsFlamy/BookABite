@@ -47,23 +47,6 @@ export class AssignItemsComponent implements OnInit {
     });
   }
 
-  openAssignOrderModal(): void {
-    if (this.selectedTable) {
-      this.reservationService.getCurrentOrder(this.selectedTable.id).subscribe(order => {
-        if (order) {
-          this.isAssignOrderModalVisible = true;
-        } else {
-          alert('No order found for this table.');
-        }
-      });
-    }
-  }
-
-  closeAssignOrderModal(): void {
-    this.isAssignOrderModalVisible = false;
-    this.resetAllQuantity();
-  }
-
   increaseQuantity(item: MenuItem): void {
     item.quantity = (item.quantity || 0) + 1;
     this.updateSelectedMenuItems(item);

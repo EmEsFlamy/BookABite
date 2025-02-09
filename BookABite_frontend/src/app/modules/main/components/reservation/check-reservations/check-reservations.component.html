@@ -1,0 +1,27 @@
+          <div class="time-slot-selection">
+            <h3>Select Time Slots</h3>
+            <div class="time-slot-container">
+              <div *ngFor="let slot of timeSlots; let i = index" class="time-slot">
+                <button
+                  nz-button
+                  [nzType]="selectedSlots.includes(i) ? 'primary' : 'default'"
+                  [disabled]="isSlotReserved(i)"
+                  (click)="onTimeSlotClick(i)"
+                >
+                  {{ slot }}
+                </button>
+              </div>
+              <div>
+                <br>
+              <button
+                nz-button
+                nzType="primary"
+                [disabled]="!selectedSlots.length"
+                (click)="confirmReservation()"
+                class="confirm-button"
+              >
+                Confirm Reservation
+              </button>
+            </div>
+            </div>
+          </div>

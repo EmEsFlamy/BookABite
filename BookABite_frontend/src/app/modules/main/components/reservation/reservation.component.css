@@ -201,4 +201,37 @@
   cursor: not-allowed;
 }
 
+.client-details {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  max-width: 400px;
+}
+
+.client-details div {
+  display: flex;
+  flex-direction: column;
+}
+
+.client-details label {
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.client-details input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.client-details input:focus {
+  border-color: #1890ff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+}
+
 

@@ -69,7 +69,7 @@
             <!-- Client Details Inputs -->
             <div class="client-details">
               <div>
-                <label for="clientName">Client Name:</label>
+                <label for="clientName">Name:</label>
                 <input
                   id="clientName"
                   type="text"
@@ -78,7 +78,7 @@
                 />
               </div>
               <div>
-                <label for="clientSurname">Client Surname:</label>
+                <label for="clientSurname">Surname:</label>
                 <input
                   id="clientSurname"
                   type="text"
@@ -87,7 +87,7 @@
                 />
               </div>
               <div>
-                <label for="clientPhoneNumber">Client Phone Number:</label>
+                <label for="clientPhoneNumber">Phone Number:</label>
                 <input
                   id="clientPhoneNumber"
                   type="text"
@@ -160,20 +160,17 @@
             <ng-template #noOrder>
               No active order for this table.
             </ng-template>
+          <div>
+            <button nz-button
+            [nzType]="'default'"  
+            (click)="openCheckReservationsModal()"
+          >
+            Reservations
+          </button>
+        </div>
 
           <!-- Update Table Status -->
-          <h3>Update Table Status</h3>
-            <!-- Waiter buttons-->
-            <div class="status-buttons" *ngIf="userRole === 'Waiter'">
-              <button
-                *ngFor="let status of waiterStatusMap | keyvalue"
-                nz-button
-                [nzType]="status.value === selectedTable.tableStatus ? 'primary' : 'default'"
-                (click)="updateTableStatus(status.key)"
-              >
-                {{ status.key }}
-              </button>
-            </div>
+          <h3 *ngIf="userRole === 'Admin'">Update Table Status</h3>
 
             <!-- Admin buttons-->
             <div class="status-buttons" *ngIf="userRole === 'Admin'">
@@ -192,15 +189,12 @@
           <div class="button-group" *ngIf="userRole === 'Waiter'">
             <!-- Start New Order Button -->
             <button nz-button 
-              [nzType]="selectedTable?.order !== null ? 'dashed' : 'default'"  
-              [disabled]="selectedTable?.order !== null" 
+              [nzType]="selectedTable?.order !== null || selectedTable?.tableStatus !== 1 ? 'dashed' : 'default'"  
+              [disabled]="selectedTable?.order !== null || selectedTable?.tableStatus !== 1" 
               (click)="startNewOrder()">Start New Order
             </button>
 
             <!-- Assign New Items Button -->
-
-          
-
           <button nz-button
               [nzType]="!selectedTable?.order ? 'dashed' : 'default'"  
               [disabled]="!selectedTable?.order" 
