@@ -1,0 +1,97 @@
+/* Wrapper styles */
+.orders-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5%;
+    background-image: url('../../../../../assets/images/background6.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    overflow-x: auto;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    font-family: 'Lucida Handwriting', 'cursive';
+    font-size: 40px;
+    color: #f9f9f9;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  
+  nz-table {
+    width: 90%;
+    max-width: 1500px;
+    height: auto;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    margin: 20px 0;
+  }
+  
+  nz-table th {
+    background-color: #4a90e2;
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    padding: 10px;
+  }
+  
+  nz-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+  }
+  
+  nz-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .nz-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .status-active {
+    color: green;
+    font-weight: bold;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background-color: rgba(0, 128, 0, 0.1);
+  }
+  
+  .status-completed {
+    color: gray;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background-color: rgba(128, 128, 128, 0.1);
+  }
+  
+  .status-pending {
+    color: orange;
+    font-weight: bold;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  
+  
+  
+  @media screen and (max-width: 768px) {
+    nz-table {
+      width: 100%;
+      font-size: 14px;
+    }
+  
+    h2 {
+      font-size: 30px;
+    }
+  
+    nz-table th, nz-table td {
+      padding: 8px;
+    }
+  }
+  

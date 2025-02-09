@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../../../../services/auth.service';
 import { Router } from '@angular/router';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 
 interface LoginResponse {
@@ -19,7 +20,12 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private modalRef: NzModalRef) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private modalRef: NzModalRef,
+    private msg: NzMessageService
+  ) {}
 
   login() {
     const credentials = { 
@@ -30,10 +36,6 @@ export class LoginComponent {
     this.authService.login(credentials).subscribe(
       (response: LoginResponse) => {
         console.log('Login successful', response);
-
-        // sessionStorage.setItem('username', this.username);
-        // sessionStorage.setItem('userType', response.userType);
-        // sessionStorage.setItem('token', response.token);
         this.modalRef.close();
         this.router.navigate(['/reservation']).then(() => {
           window.location.reload();
@@ -41,7 +43,7 @@ export class LoginComponent {
       },
       (error) => {
         console.error('Login failed', error);
-        this.errorMessage = 'Invalid username or password';
+        this.msg.error('Invalid username or password');
       }
     );
   }

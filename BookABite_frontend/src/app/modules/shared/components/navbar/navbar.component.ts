@@ -1,4 +1,7 @@
 import { Component, HostListener } from '@angular/core';
+import { UserService } from '../../../../../services/user.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +13,10 @@ export class NavbarComponent {
   userRole: string = '';
   username = sessionStorage.getItem('username');
 
+  constructor(
+    private userService: UserService,
+    private modal: NzModalService
+  ) { }
   ngOnInit() {
     const userType = sessionStorage.getItem('userType');
     if(userType){
@@ -23,6 +30,24 @@ export class NavbarComponent {
     sessionStorage.clear();
     window.location
   }
+
+  openPasswordModal(){
+    const modalRef = this.modal.create({
+          nzTitle: 'Change Password',
+          nzContent: ChangePasswordComponent,
+          nzOnOk: (instance) => instance.changePassword(),
+          nzFooter: null,
+        });
+
+        modalRef.afterClose.subscribe(result => {
+          console.log('Modal closed', result);
+          if (result) {
+            this.modal.closeAll();
+          }
+        });
+  }
+
+
   
   @HostListener('window:scroll', [])
   onWindowScroll() {

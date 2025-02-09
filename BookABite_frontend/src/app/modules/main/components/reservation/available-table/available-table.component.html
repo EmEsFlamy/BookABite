@@ -1,0 +1,20 @@
+<div class="available-tables-container">
+    <!-- Left side: Time slot buttons -->
+    <div class="time-slots">
+      <h3>Select a Time Slot</h3>
+      <button *ngFor="let slot of timeSlots" (click)="onTimeSlotChange(slot)" 
+              [class.active]="slot === selectedTimeSlot">
+        {{ slot }}
+      </button>
+    </div>
+  
+    <!-- Right side: Available Tables -->
+    <div class="available-tables">
+      <div class="table-grid">
+        <div *ngFor="let tableId of availableTables" class="table-item">
+          Table {{ tableId }}
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,4 +1,4 @@
-<div class="reservations-wrapper" *ngIf="userRole === 'Waiter' || 'Admin'">
+<div class="reservations-wrapper" *ngIf="userRole === 'Waiter' || userRole === 'Admin'">
   <h2>Reservations List</h2>
   <nz-table
   [nzBordered]="true"

@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges, OnInit, EventEmitter, Output } from '@angular/core';
-import { MenuService, MenuItem } from '../../../../../../services/menu.service';
+import { Component, Input} from '@angular/core';
 import { ReservationPayload, ReservationService } from '../../../../../../services/reservation.service';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-check-reservations',
@@ -11,7 +11,11 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 export class CheckReservationsComponent {
 
   selectedSlots: number[] = [];
-  constructor(private modalRef: NzModalRef, private reservationService: ReservationService ) {}
+  constructor(
+    private modalRef: NzModalRef, 
+    private reservationService: ReservationService,
+    private msg: NzMessageService,
+   ) {}
 
   @Input() selectedTable: any;
   @Input() timeSlots: string[] = [];
@@ -91,10 +95,11 @@ export class CheckReservationsComponent {
       this.reservationService.reserveTable(reservationPayload).subscribe(
         (response) => {
           console.log('Reservation confirmed successfully:', response);
-          alert('Reservation confirmed successfully!\nReservation start: ' + this.timeSlots[startTimeSlot]);
+        this.msg.success('Reservation confirmed successfully!\nReservation start: ' + this.timeSlots[startTimeSlot]);
         },
         (error) => {
           console.error('Error confirming reservation:', error);
+          this.msg.error('Failed to confirm reservation');
           if (error.error) {
             console.error('Server Error:', error.error);
           } else {

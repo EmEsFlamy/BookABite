@@ -8,6 +8,7 @@ import { ViewOrderComponent } from './view-order/view-order.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { AssignItemsComponent } from './assign-items/assign-items.component';
 import { CheckReservationsComponent } from './check-reservations/check-reservations.component';
+import { AvailableTableComponent } from './available-table/available-table.component';
 
 // interface Category {
 //   name: string;
@@ -525,6 +526,30 @@ confirmReservation(): void {
       }
     });
   }
+
+  openAvailableTableModal(): void {
+    const modalRef = this.modal.create({
+      nzTitle: 'Available Tables',
+      nzContent: AvailableTableComponent,
+      nzFooter: null,
+    });
+  
+    if (modalRef.componentInstance) {
+      modalRef.componentInstance.timeSlots = this.timeSlots;
+      modalRef.componentInstance.reservations = this.reservations;
+      modalRef.componentInstance.allTables = this.tables.map(table => table.id);
+    }
+  
+    modalRef.afterClose.subscribe(result => {
+      console.log('Modal closed', result);
+      if (result) {
+        this.fetchReservations();
+        this.fetchTables();
+        this.modal.closeAll();
+      }
+    });
+  }
+  
 
 
   getStatusType(status: number): NzButtonType{

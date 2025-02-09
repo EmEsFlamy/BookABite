@@ -32,6 +32,12 @@
           <a class="nav-link" routerLink="/reservation/all">Reservations</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" routerLink="/orders/all">Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="openPasswordModal()">Password</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="#" (click)="logout()">Logout</a>
         </li>
       </ul>
@@ -49,6 +55,9 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/reservation/all">Reservations</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="openPasswordModal()">Password</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#" (click)="logout()">Logout</a>

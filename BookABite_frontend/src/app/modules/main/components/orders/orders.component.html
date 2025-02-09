@@ -1,0 +1,54 @@
+<div class="orders-wrapper" *ngIf="userRole === 'Waiter' || userRole === 'Admin'">
+    <h2>Orders List</h2>
+    <nz-table
+    [nzBordered]="true"
+    [nzData]="orders"
+    [nzSize]="'middle'"
+    [nzPageSize]="pageSize"
+    [nzPageIndex]="currentPage"
+    [nzTotal]="orders.length"
+    [nzShowPagination]="orders.length > pageSize"
+    (nzPageIndexChange)="onPageChange($event)"
+  >
+      <thead>
+        <tr>
+          <th nzWidth="5%">ID</th>
+          <th nzWidth="10%">Waiter</th>
+          <th nzWidth="5%">Table</th>
+          <th nzWidth="7%">Full Price</th>
+          <th nzWidth="15%">Items</th>
+          <th nzWidth="10%">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of paginatedOrders">
+          <td>{{ order.id }}</td>
+          <td>{{ getUserFullName(order.userId) }}</td>
+          <td>{{ order.tableId }}</td>
+          <td>{{ order.fullPrice | currency }}</td>
+          <td>
+            <ul *ngIf="processOrderItems(order).length > 0; else noItems">
+              <li *ngFor="let item of processOrderItems(order)">
+                {{ item.foodName }} - {{ item.quantity }} x {{ item.price | currency }}
+              </li>
+            </ul>
+          
+            <ng-template #noItems>
+              <p>No items in this order.</p>
+            </ng-template>
+          </td>
+          <td>
+            <span
+              [ngClass]="{
+                'status-active': order.orderStatus === 0,
+                'status-completed': order.orderStatus === 1
+              }"
+            >
+              {{ getOrderStatus(order) }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  

@@ -17,6 +17,9 @@ import { CreateUserDialogComponent } from './components/accounts/create-user-dia
 import { ViewOrderComponent } from './components/reservation/view-order/view-order.component';
 import { AssignItemsComponent } from './components/reservation/assign-items/assign-items.component';
 import { CheckReservationsComponent } from './components/reservation/check-reservations/check-reservations.component';
+import { OrdersComponent } from './components/orders/orders.component';
+import { AvailableTableComponent } from './components/reservation/available-table/available-table.component';
+import { ChangePasswordComponent } from '../shared/components/navbar/change-password/change-password.component';
 
 
 @NgModule({
@@ -35,7 +38,10 @@ import { CheckReservationsComponent } from './components/reservation/check-reser
         CreateUserDialogComponent,
         ViewOrderComponent,
         AssignItemsComponent,
-        CheckReservationsComponent],
+        CheckReservationsComponent,
+        OrdersComponent,
+        AvailableTableComponent,
+        ChangePasswordComponent],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],

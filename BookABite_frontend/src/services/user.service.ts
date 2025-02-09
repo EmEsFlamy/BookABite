@@ -47,12 +47,12 @@ export class UserService {
     );
   }
 
-  resetPassword(payload: { 
-    userId: number; 
+  changePassword(payload: { 
+    userId: string; 
     password: string;
   }): Observable<any> {
     return this.http.put(
-      `${this.apiUserUrl}`, 
+      `${this.apiUserUrl}/changePassword`, 
       payload, 
       { headers: this.getHeaders() }
     );
