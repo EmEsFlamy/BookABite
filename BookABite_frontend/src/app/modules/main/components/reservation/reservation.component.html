@@ -57,6 +57,9 @@
         <!-- Step 2: Time Slot Selection -->
         <ng-container *ngIf="currentStep === 2">
           <div class="time-slot-selection">
+            <h3>Select Reservation Date</h3>
+            <nz-date-picker [(ngModel)]="selectedDate" [nzDisabledDate]="disablePastAndWeekends" [nzFormat]="'yyyy-MM-dd'" (ngModelChange)="onDateChange()"></nz-date-picker>
+    
             <h3>Select Time Slots</h3>
             <div class="time-slot-container">
               <div *ngFor="let slot of timeSlots; let i = index" class="time-slot">
@@ -114,7 +117,7 @@
               <button
                 nz-button
                 nzType="primary"
-                [disabled]="!selectedSlots.length || !clientName || !clientSurname || !clientPhoneNumber"
+                [disabled]="!selectedSlots.length || !clientName || !clientSurname || !clientPhoneNumber || !selectedDate"
                 (click)="confirmReservation()"
                 class="confirm-button"
               >

@@ -9,6 +9,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { AssignItemsComponent } from './assign-items/assign-items.component';
 import { CheckReservationsComponent } from './check-reservations/check-reservations.component';
 import { AvailableTableComponent } from './available-table/available-table.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 // interface Category {
 //   name: string;
@@ -28,25 +29,19 @@ export class ReservationComponent {
   isModalVisible = false;
   isAssignOrderModalVisible = false;
 
-  // categories: Category[] = [];
-  // menuItems: { [key: string]: MenuItem[] } = {};
-  // selectedCategory: Category = this.categories[0];
   allItems: MenuItem[] = [];
   selectedTable: any;
   currentStep = 1;
   selectedSlots: number[] = [];
   newStatus = '';
-  newOrder = '';
   userRole = '';
-  selectedStatus = '';
   clientName = '';
   clientSurname = '';
   clientPhoneNumber = '';
   reservations: { tableId: number; reservationStart: string; reservationEnd: string }[] = [];
   intervalId: any;
   selectedMenuItems: MenuItem[] = [];
-  currentOrder: { [key: number]: Order | null } = {};
-  
+  selectedDate: Date = new Date();
 
   reverseTableStatusMap: { [key: number]: string } = {
     0: 'Available',
@@ -67,7 +62,14 @@ export class ReservationComponent {
 
   tableStatusOptions = Object.keys(this.tableStatusMap);
 
-  constructor(private reservationService: ReservationService, private menuService: MenuService, private menuHelper: MenuHelperService, private cdr: ChangeDetectorRef, private modal: NzModalService) {}
+  constructor(
+    private reservationService: ReservationService, 
+    private menuService: MenuService, 
+    private menuHelper: MenuHelperService, 
+    private cdr: ChangeDetectorRef, 
+    private modal: NzModalService,
+    private msg: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     const userType = sessionStorage.getItem('userType');
@@ -108,13 +110,21 @@ export class ReservationComponent {
   fetchReservations(): void {
     this.reservationService.getReservations().subscribe(
       (data) => {
-        this.reservations = data;
+        if (this.selectedDate) {
+          const selectedDate = new Date(this.selectedDate).toDateString();
+          this.reservations = data.filter(reservation => {
+            return new Date(reservation.reservationStart).toDateString() === selectedDate;
+          });
+        } else {
+          this.reservations = data;
+        }
       },
       (error) => {
         console.error('Error fetching reservations:', error);
       }
     );
   }
+  
 
   getStatusLabel(): string {
     if (!this.selectedTable) return 'Unknown';
@@ -152,8 +162,11 @@ export class ReservationComponent {
   private resetSelections(): void {
     this.selectedSlots = [];
     this.newStatus = '';
-    this.newOrder = '';
     this.selectedTable = null;
+    this.clientName = '';
+    this.clientSurname = '';
+    this.clientPhoneNumber = '';
+    this.selectedDate = new Date();
   }
 
   // Handle time slot selection
@@ -166,19 +179,34 @@ export class ReservationComponent {
     }
   }
 
+  onDateChange(): void {
+    this.selectedSlots = [];
+    this.fetchReservations();
+  }
+
+  disablePastAndWeekends = (current: Date): boolean => {
+    if (!current) return false;
+  
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate comparison
+  
+    const day = current.getDay(); // 0 = Sunday, 6 = Saturday
+  
+    return current < today || day === 0 || day === 6; 
+  };
+
   // Handle reservation confirmation
 confirmReservation(): void {
   if (this.selectedTable && this.selectedSlots.length > 0) {
     let reservationStart: string = '';
     let reservationEnd: string = '';
 
-    const selectedDate = new Date();
 
     const startTimeSlot = this.selectedSlots[0];
-    reservationStart = `${selectedDate.toISOString().split('T')[0]}T${this.timeSlots[startTimeSlot]}:00Z`;
+    reservationStart = `${this.selectedDate.toISOString().split('T')[0]}T${this.timeSlots[startTimeSlot]}:00Z`;
 
     const lastTimeSlot = this.selectedSlots[this.selectedSlots.length - 1];
-    reservationEnd = `${selectedDate.toISOString().split('T')[0]}T${this.timeSlots[lastTimeSlot]}:00Z`;
+    reservationEnd = `${this.selectedDate.toISOString().split('T')[0]}T${this.timeSlots[lastTimeSlot]}:00Z`;
 
     const endDateTime = new Date(reservationEnd); 
     endDateTime.setMinutes(endDateTime.getMinutes() + 59);
@@ -202,12 +230,14 @@ confirmReservation(): void {
     this.reservationService.reserveTable(reservationPayload).subscribe(
       (response) => {
         console.log('Reservation confirmed successfully:', response);
+        this.msg.success('Reservation confirmed successfully');
         this.fetchTables();
         this.handleCancel();
         this.fetchReservations();
       },
       (error) => {
         console.error('Error confirming reservation:', error);
+        this.msg.error('Error confirming reservation');
         if (error.error) {
           console.error('Server Error:', error.error);
         } else {
@@ -217,40 +247,25 @@ confirmReservation(): void {
     );
   } else {
     console.warn('Selected table or time slots are not available.');
+    this.msg.warning('Please select a table and time slots');
   }
 }
 
 
   isSlotReserved(index: number): boolean {
+    if (!this.selectedDate) {
+      return false;
+    }
+  
     const selectedTime = this.timeSlots[index];
-    
-    const today = new Date().toLocaleDateString('en-CA');
-    const time = new Date().toTimeString().slice(0, 5);
-    //custom day and time
-    // const today = `2025-01-07`;
-    // const time = `10:00`;
-    
-    const now = new Date(`${today}T${time}:00Z`);
-    
-    const selectedDateTime = new Date(`${today}T${selectedTime}:00Z`);
-    
-     if (selectedDateTime < now) {
-        return true;
-      }
+    const selectedDateTime = new Date(`${this.selectedDate.toISOString().split('T')[0]}T${selectedTime}:00Z`);
   
     return this.reservations.some((reservation) => {
       const reservationStart = new Date(reservation.reservationStart);
       const reservationEnd = new Date(reservation.reservationEnd);
-  
-      return (
-        this.selectedTable &&
-        this.selectedTable.id === reservation.tableId &&
-        selectedDateTime >= reservationStart &&
-        selectedDateTime < reservationEnd
-      );
+      return selectedDateTime >= reservationStart && selectedDateTime < reservationEnd;
     });
   }
-  
 
   // Update table status
   updateTableStatus(newStatus: string): void {
