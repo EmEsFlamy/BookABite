@@ -1,0 +1,67 @@
+<div>
+    <form [formGroup]="validateForm">
+      <div nz-row nzJustify="center">
+        <div nz-col [nzSpan]="8">
+          <nz-form-item>
+            <nz-form-label [nzFor]="'clientName'">Client Name</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="clientName" id="clientName" />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzFor]="'clientSurname'">Client Surname</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="clientSurname" id="clientSurname" />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzFor]="'clientPhoneNumber'">Phone</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="clientPhoneNumber" id="clientPhoneNumber" />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <!-- Table selection dropdown -->
+          <nz-form-item>
+            <nz-form-label [nzFor]="'tableId'">Table</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="tableId" id="tableId" [nzOptions]="tableOptions"></nz-select>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <!-- Date picker for reservation day -->
+          <nz-form-item>
+            <nz-form-label [nzFor]="'reservationDay'">Reservation Day</nz-form-label>
+            <nz-form-control>
+              <nz-date-picker formControlName="reservationDay" id="reservationDay" nzFormat="YYYY-MM-dd"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <!-- Time picker for start time -->
+          <nz-form-item>
+            <nz-form-label [nzFor]="'reservationStart'">Reservation Start</nz-form-label>
+            <nz-form-control>
+              <nz-time-picker formControlName="reservationStart" id="reservationStart" nzFormat="HH:mm"></nz-time-picker>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <!-- Time picker for end time -->
+          <nz-form-item>
+            <nz-form-label [nzFor]="'reservationEnd'">Reservation End</nz-form-label>
+            <nz-form-control>
+              <nz-time-picker formControlName="reservationEnd" id="reservationEnd" nzFormat="HH:mm"></nz-time-picker>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-control>
+              <button nz-button nzType="primary" (click)="updateReservation()" [disabled]="!validateForm.valid">Save</button>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </div>
+  

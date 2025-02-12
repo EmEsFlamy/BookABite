@@ -60,6 +60,7 @@ export class AccountsComponent implements OnInit {
       nzTitle: 'Edit User',
       nzContent: EditUserDialogComponent,
       nzData: { user },
+      nzFooter: null,
       nzOnOk: (instance) => instance.updateUser(),
     });
   

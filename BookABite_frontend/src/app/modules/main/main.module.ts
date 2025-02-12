@@ -20,6 +20,7 @@ import { CheckReservationsComponent } from './components/reservation/check-reser
 import { OrdersComponent } from './components/orders/orders.component';
 import { AvailableTableComponent } from './components/reservation/available-table/available-table.component';
 import { ChangePasswordComponent } from '../shared/components/navbar/change-password/change-password.component';
+import { EditReservationListDialogComponent } from './components/reservationsList/edit-reservationList-dialog/edit-reservationList-dialog.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { ChangePasswordComponent } from '../shared/components/navbar/change-pass
         CheckReservationsComponent,
         OrdersComponent,
         AvailableTableComponent,
-        ChangePasswordComponent],
+        ChangePasswordComponent,
+        EditReservationListDialogComponent],
     imports: [CommonModule, MainRoutingModule, SharedModule],
     providers: [],
     exports: [],

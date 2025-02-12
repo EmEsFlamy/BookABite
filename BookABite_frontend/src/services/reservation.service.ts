@@ -71,6 +71,24 @@ export interface BaseTable {
         `${this.apiReservationUrl}/data`
       );
     }
+
+    updateReservation(payload: {
+      id: number;
+      clientName: string; 
+      clientSurname: string;  
+      clientPhoneNumber: string;
+      tableId: number;
+      isActive: boolean;
+      isCompleted: boolean;
+      reservationStart: string;
+      reservationEnd: string;
+    }): Observable<any> {
+      return this.http.put(
+        `${this.apiReservationUrl}`, 
+        payload, 
+        { headers: this.getHeaders() }
+      );
+    }
   
     getReservationsAll(): Observable<any> {
       return this.http.get(`${this.apiReservationUrl}/all`, { headers: this.getHeaders() });
@@ -107,6 +125,10 @@ export interface BaseTable {
   
     updateOrder(updatedData: Partial<Order>): Observable<Order> {
       return this.http.put<Order>(`${this.apiOrderUrl}`, updatedData, { headers: this.getHeaders() });
+    }
+
+    deleteReservation(id: number): Observable<any> {
+      return this.http.delete(`${this.apiReservationUrl}?reservationId=${id}`, { headers: this.getHeaders() });
     }
   }
   

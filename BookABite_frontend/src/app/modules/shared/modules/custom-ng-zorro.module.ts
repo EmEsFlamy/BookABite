@@ -22,6 +22,7 @@ import {NzSpinModule} from 'ng-zorro-antd/spin';
 import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzAutocompleteModule} from 'ng-zorro-antd/auto-complete';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
@@ -79,7 +80,8 @@ const importedModules = [
     NzImageModule,
     NzBadgeModule,
     NzCascaderModule,
-    NzCarouselModule
+    NzCarouselModule,
+    NzTimePickerModule
 ];
 
 const icons: IconDefinition[] = [

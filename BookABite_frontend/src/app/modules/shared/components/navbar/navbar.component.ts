@@ -11,7 +11,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 export class NavbarComponent {
   isScrolled = false;
   userRole: string = '';
-  username = sessionStorage.getItem('username');
+  name: string = ''
+  surname: string = ''
 
   constructor(
     private userService: UserService,
@@ -19,11 +20,27 @@ export class NavbarComponent {
   ) { }
   ngOnInit() {
     const userType = sessionStorage.getItem('userType');
+    this.fetchUsername();
     if(userType){
       this.userRole = userType
     }else{
       this.userRole = 'Guest';
     }
+  }
+
+  fetchUsername() {
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) return;
+
+    this.userService.getUserById(+userId).subscribe(
+      (user) => {
+        this.name = user?.name;
+        this.surname = user?.surname;
+      },
+      (error) => {
+        console.error('Failed to fetch user:', error);
+      }
+    );
   }
 
   logout() {

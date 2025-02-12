@@ -29,6 +29,10 @@ export class UserService {
     return this.http.get(`${this.apiUserUrl}/all`, { headers: this.getHeaders() });
   }
 
+  getUserById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUserUrl}?userId=${id}`, { headers: this.getHeaders() });
+  }
+
   addUser(payload: RegisterPayload): Observable<any> {
     return this.http.post(`${this.apiUserUrl}/register`, payload);
   }

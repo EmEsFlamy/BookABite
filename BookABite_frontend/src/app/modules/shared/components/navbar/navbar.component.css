@@ -7,7 +7,8 @@
     background-color: transparent;
     padding: 1rem;
     z-index: 1000;
-    transition: background-color 0.3s ease
+    transition: background-color 0.3s ease;
+    font-family: 'Lucida Handwriting', 'cursive';
   }
 
   .navbar.scrolled {

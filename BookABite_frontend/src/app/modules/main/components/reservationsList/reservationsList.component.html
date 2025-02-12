@@ -15,10 +15,11 @@
         <th nzWidth="10%">ID</th>
         <th nzWidth="20%">Client Name</th>
         <th nzWidth="20%">Client Phone</th>
-        <th nzWidth="20%">Table ID</th>
+        <th nzWidth="5%">Table</th>
         <th nzWidth="7%">Reservation Day</th>
         <th nzWidth="13%">Reservation Time</th>
         <th nzWidth="10%">Status</th>
+        <th nzWidth="10%">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -42,6 +43,14 @@
           >
             {{ getReservationStatus(reservation) }}
           </span>
+        </td>
+        <td>
+          <button nz-button nzType="default" (click)="openEditReservationModal(reservation)">
+            Edit
+          </button>
+          <button nz-button nzDanger (click)="deleteReservation(reservation.id)">
+            Delete
+          </button>
         </td>
       </tr>
     </tbody>

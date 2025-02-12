@@ -8,7 +8,7 @@
     }}
   </h2>
   
-  <button nz-button 
+  <button nz-button *ngIf="userRole === 'Waiter'"
     (click)="openAvailableTableModal()"
   >
     Find Available Tables

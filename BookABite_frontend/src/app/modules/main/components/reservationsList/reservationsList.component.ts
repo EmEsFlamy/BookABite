@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { ReservationService } from '../../../../../services/reservation.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { EditReservationListDialogComponent } from './edit-reservationList-dialog/edit-reservationList-dialog.component';
 
 
 @Component({
@@ -15,7 +18,11 @@ export class ReservationsListComponent {
   currentPage: number = 1;
   pageSize: number = 8;
 
-  constructor(private reservationService: ReservationService){}
+  constructor(
+    private reservationService: ReservationService,
+    private msg: NzMessageService,
+    private modal: NzModalService,
+  ){}
 
 ngOnInit(): void {
   const userType = sessionStorage.getItem('userType');
@@ -82,6 +89,39 @@ filterAndSortReservations(): void {
     });
 }
 
+ // Open a modal to edit an existing reservation
+  openEditReservationModal(reservation: any): void {
+    const modalRef = this.modal.create({
+      nzTitle: 'Edit Reservation',
+      nzContent: EditReservationListDialogComponent,
+      nzData: { reservation },
+      nzOnOk: (instance) => instance.updateReservation(),
+      nzFooter: null,
+    });
+  
+    modalRef.afterClose.subscribe((result) => {
+      if (result) {
+        this.fetchReservations();
+      }
+    });
+  }
 
+  // Delete a reservation
+  deleteReservation(id: number): void {
+    this.modal.confirm({
+      nzTitle: 'Are you sure to delete this reservation?',
+      nzOnOk: () => {
+        this.reservationService.deleteReservation(id).subscribe(
+          () => {
+            this.fetchReservations();
+            this.msg.success('Reservation deleted successfully');
+          },
+          (error) => {
+            this.msg.error('Failed to delete reservation');
+          }
+        );
+      },
+    });
+  }
   
 }
