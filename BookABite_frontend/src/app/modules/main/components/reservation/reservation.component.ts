@@ -256,15 +256,32 @@ confirmReservation(): void {
     if (!this.selectedDate) {
       return false;
     }
-  
+    
+    const now = new Date();
     const selectedTime = this.timeSlots[index];
     const selectedDateTime = new Date(`${this.selectedDate.toISOString().split('T')[0]}T${selectedTime}:00Z`);
+
+    if (this.selectedDate.toDateString() === now.toDateString()) {
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      const [slotHour, slotMinute] = selectedTime.split(':').map(Number);
+      
+      if (slotHour < currentHour || (slotHour === currentHour && slotMinute < currentMinute)) {
+        return true; // Disable past slots
+      }
+    }
   
     return this.reservations.some((reservation) => {
-      const reservationStart = new Date(reservation.reservationStart);
-      const reservationEnd = new Date(reservation.reservationEnd);
-      return selectedDateTime >= reservationStart && selectedDateTime < reservationEnd;
-    });
+    const reservationStart = new Date(reservation.reservationStart);
+    const reservationEnd = new Date(reservation.reservationEnd);
+    
+    return (
+      this.selectedTable &&
+      this.selectedTable.id === reservation.tableId &&
+      selectedDateTime >= reservationStart &&
+      selectedDateTime < reservationEnd
+    );
+  });
   }
 
   // Update table status

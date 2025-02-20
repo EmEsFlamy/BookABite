@@ -19,7 +19,7 @@
         <th nzWidth="7%">Reservation Day</th>
         <th nzWidth="13%">Reservation Time</th>
         <th nzWidth="10%">Status</th>
-        <th nzWidth="10%">Actions</th>
+        <th nzWidth="10%" *ngIf="userRole === 'Admin'">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -44,7 +44,7 @@
             {{ getReservationStatus(reservation) }}
           </span>
         </td>
-        <td>
+        <td *ngIf="userRole === 'Admin'">
           <button nz-button nzType="default" (click)="openEditReservationModal(reservation)">
             Edit
           </button>
